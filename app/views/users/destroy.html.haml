@@ -1,0 +1,28 @@
+%h1 Confirm Delete of User
+
+%p
+  %b Login:
+  =h @user.login 
+%p
+  %b Crypted password:
+  =h @user.crypted_password 
+%p
+  %b Password salt:
+  =h @user.password_salt 
+%p
+  %b Persistence token:
+  =h @user.persistence_token 
+%p
+  %b Perishable token:
+  =h @user.perishable_token 
+%p
+  %b Login count:
+  =h @user.login_count 
+%p
+  %b Failed login count:
+  =h @user.failed_login_count 
+
+- form_for(@user, :html => {:method => :delete}) do |f| 
+  %p Are you sure you want to delete the user?
+  %p= submit_tag "Yes - Delete this user", :id => "confirm_delete"
+  %p= link_to "No - go back", users_path

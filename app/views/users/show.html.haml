@@ -1,0 +1,31 @@
+%p
+  %b Login:
+  =h @user.login 
+
+%p
+  %b Crypted password:
+  =h @user.crypted_password 
+
+%p
+  %b Password salt:
+  =h @user.password_salt 
+
+%p
+  %b Persistence token:
+  =h @user.persistence_token 
+
+%p
+  %b Perishable token:
+  =h @user.perishable_token 
+
+%p
+  %b Login count:
+  =h @user.login_count 
+
+%p
+  %b Failed login count:
+  =h @user.failed_login_count 
+
+
+= link_to 'Edit', edit_user_path(@user)
+= link_to 'Back', users_path

@@ -1,0 +1,34 @@
+%h1 Listing Users
+
+%table.users
+  %tr.header
+    %th.login
+      Login
+    %th.crypted_password
+      Crypted password
+    %th.password_salt
+      Password salt
+    %th.persistence_token
+      Persistence token
+    %th.perishable_token
+      Perishable token
+    %th.login_count
+      Login count
+    %th.failed_login_count
+      Failed login count
+
+  - for user in @users
+    %tr{:class => cycle("odd", "even") + ' ' + 'user'}
+      %td=h user.login
+      %td=h user.crypted_password
+      %td=h user.password_salt
+      %td=h user.persistence_token
+      %td=h user.perishable_token
+      %td=h user.login_count
+      %td=h user.failed_login_count
+      %td= link_to 'Show', user_path(user)
+      %td= link_to 'Edit', edit_user_path(user)
+      %td= link_to 'Destroy', destroy_user_path(user)
+
+    
+= link_to 'New user', new_user_path 
