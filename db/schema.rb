@@ -9,7 +9,39 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090222064032) do
+ActiveRecord::Schema.define(:version => 20090222195617) do
+
+  create_table "articles", :force => true do |t|
+    t.string   "title"
+    t.string   "subtitle"
+    t.text     "body"
+    t.text     "blurb"
+    t.text     "metakeywords"
+    t.text     "metadescription"
+    t.text     "body_html"
+    t.string   "status"
+    t.datetime "published_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "pages", :force => true do |t|
+    t.string   "name"
+    t.string   "url"
+    t.integer  "parent_page_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "placements", :force => true do |t|
+    t.integer  "article_id"
+    t.integer  "page_id"
+    t.integer  "list_order"
+    t.string   "display"
+    t.boolean  "primary"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", :force => true do |t|
     t.string   "login"
