@@ -80,6 +80,13 @@ class RspecHamlScaffoldGenerator < Rails::Generator::NamedBase
           File.join('app/views', controller_class_path, controller_file_name, "#{action}.#{default_file_extension}")
         )
       end
+
+	  # object partial
+      m.template(
+        "rspec_haml_scaffold:_object.html.erb",
+          File.join('app/views', controller_class_path, controller_file_name, "_#{name}.html.haml")
+      )
+
       
       # Model class, unit test, and fixtures.
       m.template 'rspec_haml_scaffold:model.rb',      File.join('app/models', "#{@controller_singular_name.singularize}.rb")
@@ -140,7 +147,7 @@ class RspecHamlScaffoldGenerator < Rails::Generator::NamedBase
     end
 
     def scaffold_views
-     %w[ index show new edit destroy _form ]
+     %w[ index show new edit _form ]
     end
     
     def model_name 

@@ -1,20 +1,8 @@
 %h1 Listing <%= plural_name.titleize %>
 
-%table.<%= plural_name %>
-  %tr.header
-<% for attribute in attributes -%>
-    %th.<%= attribute.name %>
-      <%=attribute.column.human_name%>
-<% end -%>
-
+%ul.<%= plural_name %>
   - for <%= singular_name %> in @<%= plural_name %>
-    %tr{:class => cycle("odd", "even") + ' ' + '<%= singular_name %>'}
-<% for attribute in attributes -%>
-      %td=h <%= singular_name %>.<%= attribute.name %>
-<% end -%>
-      %td= link_to 'Show', <%= path_for(table_name, singular_name, "show").gsub(/@/, "") %>
-      %td= link_to 'Edit', <%= path_for(table_name, singular_name, "edit").gsub(/@/, "") %>
-      %td= link_to 'Destroy', <%= path_for(table_name, singular_name, "destroy").gsub(/@/, "") %>
-
+    %li{:class => cycle("odd", "even") + ' ' + '<%= singular_name %>'}
+      = render :partial => "<%= singular_name %>", :collection => @<%= plural_name %>
     
 = link_to 'New <%= singular_name.singularize %>', new_<%= table_name.singularize %>_path 
