@@ -14,13 +14,14 @@ ActiveRecord::Schema.define(:version => 20090222195617) do
   create_table "articles", :force => true do |t|
     t.string   "title"
     t.string   "subtitle"
-    t.text     "body"
     t.text     "blurb"
-    t.text     "metakeywords"
-    t.text     "metadescription"
+    t.text     "body"
     t.text     "body_html"
     t.string   "status"
     t.datetime "published_at"
+    t.integer  "legacy_id"
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -28,7 +29,11 @@ ActiveRecord::Schema.define(:version => 20090222195617) do
   create_table "pages", :force => true do |t|
     t.string   "name"
     t.string   "url"
+    t.string   "redirect_to"
     t.integer  "parent_page_id"
+    t.integer  "legacy_id"
+    t.text     "metakeywords"
+    t.text     "metadescription"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -51,6 +56,7 @@ ActiveRecord::Schema.define(:version => 20090222195617) do
     t.string   "perishable_token"
     t.integer  "login_count"
     t.integer  "failed_login_count"
+    t.integer  "legacy_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

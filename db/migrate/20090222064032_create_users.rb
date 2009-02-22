@@ -8,6 +8,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :perishable_token
       t.integer :login_count
       t.integer :failed_login_count
+      t.integer :legacy_id
 
       t.timestamps 
     end

@@ -1,8 +1,0 @@
-%h1 Listing <%= plural_name.titleize %>
-
-%ul.<%= plural_name %>
-  - for <%= singular_name %> in @<%= plural_name %>
-    %li{:class => cycle("odd", "even") + ' ' + '<%= singular_name %>'}
-      = render :partial => "<%= singular_name %>", :collection => @<%= plural_name %>
-    
-= link_to 'New <%= singular_name.singularize %>', new_<%= table_name.singularize %>_path 
