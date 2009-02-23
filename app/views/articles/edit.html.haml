@@ -1,0 +1,11 @@
+%h1 Editing Article
+
+= error_messages_for :article 
+
+- form_for(@article) do |f|
+  = render(:partial => 'form', :locals => {:f => f})
+  %p= f.submit "Update"
+
+= link_to 'Show', article_path(@article)
+= link_to 'Back', articles_path
+

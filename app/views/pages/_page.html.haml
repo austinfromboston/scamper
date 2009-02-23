@@ -1,0 +1,11 @@
+- content_tag_for :div, page do
+  %p
+    %strong Name:
+    =h page.name
+  %p
+    %strong Url:
+    =h page.url
+  %p
+    %strong Parent page:
+    =h page.parent_page_id
+= link_to 'Edit', edit_page_path(page), :class => "edit button"

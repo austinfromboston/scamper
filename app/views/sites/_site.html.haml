@@ -1,0 +1,11 @@
+- content_tag_for :div, site do
+  %p
+    %strong Name:
+    =h site.name
+  %p
+    %strong Url:
+    =h site.url
+  %p
+    %strong Landing page:
+    =h site.landing_page_id
+= link_to 'Edit', edit_site_path(site), :class => "edit button"

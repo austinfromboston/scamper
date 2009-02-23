@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090222195617) do
+ActiveRecord::Schema.define(:version => 20090223042936) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(:version => 20090222195617) do
     t.string   "name"
     t.string   "url"
     t.string   "redirect_to"
+    t.string   "tag"
     t.integer  "parent_page_id"
     t.integer  "legacy_id"
     t.text     "metakeywords"
@@ -43,7 +44,15 @@ ActiveRecord::Schema.define(:version => 20090222195617) do
     t.integer  "page_id"
     t.integer  "list_order"
     t.string   "display"
-    t.boolean  "primary"
+    t.boolean  "canonical"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sites", :force => true do |t|
+    t.string   "name"
+    t.string   "url"
+    t.integer  "landing_page_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

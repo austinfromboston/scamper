@@ -1,0 +1,23 @@
+%p
+  %b Article:
+  =h @placement.article_id 
+
+%p
+  %b Page:
+  =h @placement.page_id 
+
+%p
+  %b List order:
+  =h @placement.list_order 
+
+%p
+  %b Display:
+  =h @placement.display 
+
+%p
+  %b Primary:
+  =h @placement.primary 
+
+
+= link_to 'Edit', edit_placement_path(@placement)
+= link_to 'Back', placements_path

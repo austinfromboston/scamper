@@ -1,3 +1,6 @@
 [submodule "public/stylesheets/blueprint"]
 	path = public/stylesheets/blueprint
 	url = git://github.com/joshuaclayton/blueprint-css.git
+[submodule "vendor/plugins/rspec-haml-scaffold-generator"]
+	path = vendor/plugins/rspec-haml-scaffold-generator
+	url = git://github.com/austinfromboston/rspec-haml-scaffold-generator.git

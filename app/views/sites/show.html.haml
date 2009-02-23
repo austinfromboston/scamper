@@ -1,0 +1,15 @@
+%p
+  %b Name:
+  =h @site.name 
+
+%p
+  %b Url:
+  =h @site.url 
+
+%p
+  %b Landing page:
+  =h @site.landing_page_id 
+
+
+= link_to 'Edit', edit_site_path(@site)
+= link_to 'Back', sites_path

@@ -1,10 +1,11 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :pages
-
-  map.resources :placements
+  map.resources :sites
 
   map.resources :articles
 
+  map.resources :pages
+
+  map.resources :placements
 
   map.root :controller => 'users'
 

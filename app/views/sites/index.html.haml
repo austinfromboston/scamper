@@ -1,0 +1,8 @@
+%h1 Listing Sites
+
+%ul.sites
+  - for site in @sites
+    %li{:class => cycle("odd", "even") + ' ' + 'site'}
+      = render :partial => "site", :collection => @sites
+    
+= link_to 'New site', new_site_path 

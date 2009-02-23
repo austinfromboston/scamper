@@ -1,0 +1,8 @@
+%h1 Listing Pages
+
+%ul.pages
+  - for page in @pages
+    %li{:class => cycle("odd", "even") + ' ' + 'page'}
+      = render :partial => "page", :collection => @pages
+    
+= link_to 'New page', new_page_path 

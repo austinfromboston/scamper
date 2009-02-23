@@ -1,0 +1,8 @@
+%h1 Listing Placements
+
+%ul.placements
+  - for placement in @placements
+    %li{:class => cycle("odd", "even") + ' ' + 'placement'}
+      = render :partial => "placement", :collection => @placements
+    
+= link_to 'New placement', new_placement_path 

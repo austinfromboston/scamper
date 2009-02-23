@@ -1,0 +1,15 @@
+%p
+  %b Name:
+  =h @page.name 
+
+%p
+  %b Url:
+  =h @page.url 
+
+%p
+  %b Parent page:
+  =h @page.parent_page_id 
+
+
+= link_to 'Edit', edit_page_path(@page)
+= link_to 'Back', pages_path

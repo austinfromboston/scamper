@@ -1,0 +1,35 @@
+- content_tag_for :div, article do
+  %p
+    %strong Title:
+    =h article.title
+  %p
+    %strong Subtitle:
+    =h article.subtitle
+  %p
+    %strong Body:
+    =h article.body
+  %p
+    %strong Blurb:
+    =h article.blurb
+  %p
+    %strong Metakeywords:
+    =h article.metakeywords
+  %p
+    %strong Metadescription:
+    =h article.metadescription
+  %p
+    %strong Body html:
+    =h article.body_html
+  %p
+    %strong Status:
+    =h article.status
+  %p
+    %strong Published at:
+    =h article.published_at
+  %p
+    %strong Created at:
+    =h article.created_at
+  %p
+    %strong Updated at:
+    =h article.updated_at
+= link_to 'Edit', edit_article_path(article), :class => "edit button"

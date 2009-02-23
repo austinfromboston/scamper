@@ -1,0 +1,10 @@
+%h1 New Placement
+
+= error_messages_for :placement 
+
+- form_for(@placement) do |f| 
+  = render(:partial => 'form', :locals => {:f => f})
+  %p
+    = f.submit "Create"
+
+= link_to 'Back', placements_path 

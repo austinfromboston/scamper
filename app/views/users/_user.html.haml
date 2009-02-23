@@ -1,0 +1,23 @@
+- content_tag_for :div, user do
+  %p
+    %strong Login:
+    =h user.login
+  %p
+    %strong Crypted password:
+    =h user.crypted_password
+  %p
+    %strong Password salt:
+    =h user.password_salt
+  %p
+    %strong Persistence token:
+    =h user.persistence_token
+  %p
+    %strong Perishable token:
+    =h user.perishable_token
+  %p
+    %strong Login count:
+    =h user.login_count
+  %p
+    %strong Failed login count:
+    =h user.failed_login_count
+= link_to 'Edit', edit_user_path(user), :class => "edit button"

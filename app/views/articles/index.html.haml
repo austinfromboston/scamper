@@ -1,0 +1,8 @@
+%h1 Listing Articles
+
+%ul.articles
+  - for article in @articles
+    %li{:class => cycle("odd", "even") + ' ' + 'article'}
+      = render :partial => "article", :collection => @articles
+    
+= link_to 'New article', new_article_path 
