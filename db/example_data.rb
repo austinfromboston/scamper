@@ -1,4 +1,7 @@
 module FixtureReplacement
+  attributes_for :article do |a|
+    a.title = "Test item"
+  end
   attributes_for :site do |a|
     a.name = "test"
     a.url = "http://example.org"

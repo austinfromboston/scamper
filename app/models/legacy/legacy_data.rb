@@ -1,7 +1,8 @@
 class LegacyData < ActiveRecord::Base
   @abstract_class = true
-  @@callbacks =  { :after_import => [] }
-  @@import_to_class = nil 
+  #import_to_class = nil 
+  #callbacks =  { :after_import => [] }
+
   attr_accessor :imported
 
   establish_connection configurations[ ( Rails.env.test? ? 'legacy_test' : 'legacy' ) ]
@@ -19,25 +20,32 @@ class LegacyData < ActiveRecord::Base
   end
 
   def self.after_import(*args)
-    @@callbacks[:after_import] << args
-    @@callbacks[:after_import].flatten!
+    self.callbacks ||=  { :after_import => [] }
+    self.callbacks[:after_import] << args
+    self.callbacks[:after_import].flatten!
   end
 
   def after_import
-    @@callbacks[:after_import].each do |cb|
+    self.callbacks ||=  { :after_import => [] }
+    self.class.callbacks[:after_import].each do |cb|
       instance_eval( cb ) and next if cb.is_a?( Proc )
       send cb
     end
   end
 
   def self.import_to( class_name )
-    @@import_to_class = const_get( class_name.to_s.classify )
-    @@import_to_class.establish_connection
+    self.import_to_class = const_get( class_name.to_s.classify )
   end
 
   def import
-    self.imported = local_object @@import_to_class
+    self.imported = local_object self.class.import_to_class
     imported.save!
     after_import
+    self.imported
   end
+
+  def simplify_tag( value )
+    value.downcase.gsub( /[^a-z0-9_]/, '_' )
+  end
+
 end

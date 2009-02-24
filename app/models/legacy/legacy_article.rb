@@ -1,6 +1,7 @@
 class LegacyArticle < LegacyData
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::TagHelper
+  cattr_accessor :callbacks, :import_to_class
   #establish_connection configurations[ ( Rails.env.test? ? 'legacy_test' : 'legacy' ) ]
   set_table_name "articles"
   set_inheritance_column nil
@@ -138,17 +139,14 @@ class LegacyArticle < LegacyData
     end
   end
 
-  def simplify_tag( value )
-    value.downcase.gsub( /[^a-z0-9_]/, '_' )
-  end
-
   def create_section_placements
     return unless type
     return if amp_class == AMP_CLASSES['section_header']
     section_page = Page.find_by_legacy_id type
     unless section_page
       section = LegacySection.find type
-      section_page = Page.create :tag => simplify_tag( section.type )
+      return unless section
+      section_page = section.import 
     end
     imported.placements.create :page => section_page, :list_order => pageorder
 
@@ -159,9 +157,16 @@ class LegacyArticle < LegacyData
     section_page = Page.find_by_legacy_id type
     unless section_page
       section = LegacySection.find type
-      section_page = Page.create :tag => simplify_tag( section.type ), :name => title
+      return unless section
+      section_page = section.import #Page.create :tag => simplify_tag( section.type ), :name => title
+      section_page.update_attributes :name => title
     end
     imported.placements.create :page => section_page, :canonical => true, :display => "header"
+  end
+
+  def import
+    return if Article.find_by_legacy_id id
+    super
   end
 
 

@@ -5,7 +5,14 @@ describe LegacyArticle do
     @site = create_site
     @article = LegacyArticle.create :title => "Test Item", :updated => 10.days.ago
   end
+  def act!
+    @article.import
+  end
 
+  it "does not import if an article with the same legacy id already exists" do
+    existing_article = create_article :legacy_id => @article.id
+    lambda { act! }.should_not change( Article, :count )
+  end
   describe "attributes:" do
 
     describe "clean date" do
@@ -37,9 +44,6 @@ describe LegacyArticle do
   end
 
   describe "associations" do
-    def act!
-      @article.import
-    end
 
     describe "primary placements" do
       it "always creates a primary placement" do
