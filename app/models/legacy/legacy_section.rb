@@ -1,6 +1,6 @@
 class LegacySection < LegacyData
   set_table_name "articletype"
-  set_inheritance_column nil
+  set_inheritance_column "legacy_type"
   before_create :set_defaults
   cattr_accessor :callbacks, :import_to_class
   import_to :page
@@ -14,6 +14,7 @@ class LegacySection < LegacyData
       :tag  => :simple_name,
       :parent_page_id => :confirm_parent_page,
       :redirect_to => :linkurl,
+      :legacy_id => :id,
       :created_at => :timestamp
     }
   }
@@ -31,9 +32,10 @@ class LegacySection < LegacyData
     parent_page = Page.find_by_legacy_id parent
     unless parent_page
       parent_section = LegacySection.find parent
-      return unless parent_section
       parent_page = parent_section.import
     end
     parent_page
+  rescue ActiveRecord::RecordNotFound
+    nil
   end
 end

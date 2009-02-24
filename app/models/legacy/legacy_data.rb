@@ -41,7 +41,12 @@ class LegacyData < ActiveRecord::Base
     self.imported = local_object self.class.import_to_class
     imported.save!
     after_import
+    log "Imported #{self.class.name} ##{id} as #{self.class.import_to_class.name} ##{imported.id}" 
     self.imported
+  end
+
+  def log(value)
+    puts value unless Rails.env.test?
   end
 
   def simplify_tag( value )

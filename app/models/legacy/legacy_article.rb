@@ -4,7 +4,7 @@ class LegacyArticle < LegacyData
   cattr_accessor :callbacks, :import_to_class
   #establish_connection configurations[ ( Rails.env.test? ? 'legacy_test' : 'legacy' ) ]
   set_table_name "articles"
-  set_inheritance_column nil
+  set_inheritance_column "legacy_type"
   import_to :article
 
   AMP_CLASSES_WITH_CUSTOM_DISPLAYS = {
@@ -101,7 +101,6 @@ class LegacyArticle < LegacyData
   end
 
   def create_primary_page
-    Page.establish_connection
     self.imported_page = local_object( Page )
     imported_page.save
     imported_page
@@ -130,7 +129,7 @@ class LegacyArticle < LegacyData
   def create_tag_placements
     taggings = LegacyTagging.find_all_by_content_foreign_key_and_content_type( id, 'article' )
     return if taggings.empty?
-    tags = taggings.map { |t| LegacyTag.find t.tag_id }.compact
+    tags = taggings.map { |t| LegacyTag.find_by_id t.tag_id }.compact
     tags.each do |tag|
       simple_tag = simplify_tag( tag.name )
       tag_page = Page.find_by_tag( simple_tag )
@@ -145,10 +144,11 @@ class LegacyArticle < LegacyData
     section_page = Page.find_by_legacy_id type
     unless section_page
       section = LegacySection.find type
-      return unless section
       section_page = section.import 
     end
     imported.placements.create :page => section_page, :list_order => pageorder
+  rescue ActiveRecord::RecordNotFound
+    nil
 
   end
 
@@ -157,11 +157,12 @@ class LegacyArticle < LegacyData
     section_page = Page.find_by_legacy_id type
     unless section_page
       section = LegacySection.find type
-      return unless section
       section_page = section.import #Page.create :tag => simplify_tag( section.type ), :name => title
       section_page.update_attributes :name => title
     end
     imported.placements.create :page => section_page, :canonical => true, :display => "header"
+  rescue ActiveRecord::RecordNotFound
+    nil
   end
 
   def import
