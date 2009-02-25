@@ -50,7 +50,7 @@ class LegacyData < ActiveRecord::Base
   end
 
   def simplify_tag( value )
-    value.downcase.gsub( /[^a-z0-9_]/, '_' )
+    value.downcase.gsub(/[-;,:'\)\(]/, '').gsub( /[^a-z0-9_]/, '_' ).gsub(/_\d{5}_/, '').squeeze '_'
   end
 
 end

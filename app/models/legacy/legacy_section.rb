@@ -12,12 +12,14 @@ class LegacySection < LegacyData
     :page => {
       :name => :type,
       :tag  => :simple_name,
-      :parent_page_id => :confirm_parent_page,
+      #:parent_page_id => :confirm_parent_page,
       :redirect_to => :linkurl,
       :legacy_id => :id,
       :created_at => :timestamp
     }
   }
+  after_import :create_primary_placement
+
   def set_defaults
     self.timestamp ||= Time.now
   end
@@ -28,15 +30,22 @@ class LegacySection < LegacyData
 
   def confirm_parent_page
     return unless parent
-    return if parent == AMP_ROOT or parent == AMP_TRASH
-    parent_page = Page.find_by_legacy_id parent
+    return if parent == AMP_TRASH
+    parent_page = Site.first.landing_page if parent == AMP_ROOT 
+    parent_page ||= Page.find_by_legacy_id parent
     unless parent_page
       parent_section = LegacySection.find parent
       parent_page = parent_section.import
     end
-    parent_page
+    parent_page.id
   rescue ActiveRecord::RecordNotFound
     nil
+  end
+
+  def create_primary_placement
+    parent_page_id = confirm_parent_page
+    return unless parent_page_id
+    imported.parent_placements.create :page_id => parent_page_id, :canonical => true, :list_order => textorder
   end
 
   def import

@@ -1,14 +1,14 @@
-%h1 Site
-%p
+%h1 
   =h @site.name 
   =h @site.url
-= link_to 'Edit', edit_site_path(@site)
+  = link_to 'Edit', edit_site_path(@site), :class => 'edit button'
 
-%h2 Landing Page
-= render @site.landing_page
+Landing Page
+= render :partial => 'pages/map', :collection => [ @site.landing_page ], :as => :page
 
-%h2 Root Pages
-= render @site.landing_page.child_pages
+-#
+  %h2 Root Pages
+  = render @site.landing_page.child_pages
 
 %h2 Core Pages
 = render Page.all :conditions => [ "tag is not ? and parent_page_id is ?", nil, nil  ]

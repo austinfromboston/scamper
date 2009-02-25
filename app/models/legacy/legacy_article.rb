@@ -2,7 +2,7 @@ class LegacyArticle < LegacyData
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::TagHelper
   cattr_accessor :callbacks, :import_to_class
-  #establish_connection configurations[ ( Rails.env.test? ? 'legacy_test' : 'legacy' ) ]
+
   set_table_name "articles"
   set_inheritance_column "legacy_type"
   import_to :article
@@ -21,6 +21,10 @@ class LegacyArticle < LegacyData
     9   => "user_submitted",
     10  => "press_release",
     20  => "blog"
+  }
+  AMP_CLASSES_WHICH_DO_NOT_AGGREGATE = {
+    1   => "general_content",
+    8   => "section_header"
   }
   AMP_CLASSES_OF_DOOM = {
     8   => "section_header",
@@ -112,13 +116,23 @@ class LegacyArticle < LegacyData
   end
 
   def create_frontpage_placement
-    imported.placements.create :page => Site.first.landing_page
+    imported.placements.create( :page => Site.first.landing_page ) if fplink == 1
   end
 
   def create_class_placements
-    return unless AMP_CLASSES_WHICH_AGGREGATE[amp_class]
-    class_page = Page.find_by_tag AMP_CLASSES_WHICH_AGGREGATE[amp_class]
-    class_page ||= Page.create :tag => AMP_CLASSES_WHICH_AGGREGATE[amp_class], :name => AMP_CLASSES_WHICH_AGGREGATE[amp_class].titleize
+    return if amp_class.nil? or AMP_CLASSES_WHICH_DO_NOT_AGGREGATE[amp_class]
+    old_class = LegacyClass.find_by_id amp_class
+
+    class_tag = old_class ? simplify_tag(old_class.amp_class) : AMP_CLASSES_WHICH_AGGREGATE[amp_class]
+    
+    # search for existing import
+    class_page = Page.find_by_tag class_tag
+
+    # import the Legacy Class
+    class_page ||= old_class.import if old_class
+    
+    # use a created page
+    class_page ||= Page.create :tag => class_tag, :name => AMP_CLASSES_WHICH_AGGREGATE[amp_class].titleize
     imported.placements.create :page => class_page
   end
 
@@ -130,7 +144,7 @@ class LegacyArticle < LegacyData
   end
 
   def create_tag_placements
-    taggings = LegacyTagging.find_all_by_content_foreign_key_and_content_type( id, 'article' )
+    taggings = LegacyTagging.find_all_by_item_id_and_item_type( id, 'article' )
     return if taggings.empty?
     tags = taggings.map { |t| LegacyTag.find_by_id t.tag_id }.compact
     tags.each do |tag|
@@ -147,7 +161,8 @@ class LegacyArticle < LegacyData
     section_page = Page.find_by_legacy_id type
     unless section_page
       section = LegacySection.find type
-      section_page = section.import 
+      return nil if section.parent == LegacySection::AMP_TRASH
+      section_page = section.import  
     end
     imported.placements.create :page => section_page, :list_order => pageorder
   rescue ActiveRecord::RecordNotFound

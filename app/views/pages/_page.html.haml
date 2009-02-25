@@ -1,11 +1,12 @@
-- content_tag_for :div, page do
-  %p
-    %strong Name:
-    =h page.name
-  %p
-    %strong Url:
-    =h page.url
-  %p
-    %strong Parent page:
-    =h page.parent_page_id
-= link_to 'Edit', edit_page_path(page), :class => "edit button"
+- div_for page do
+  %h2
+    = link_to( page.name.blank? ? page.tag : page.name, page_path(page))
+  .url
+    = page.url
+  .tag
+    = page.tag
+  = link_to 'Edit', edit_page_path(page), :class => "edit button"
+
+  = page.parent_pages.each do |pp|
+    parent:
+    = link_to pp.name, page_path( pp )

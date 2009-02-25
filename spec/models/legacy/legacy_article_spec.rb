@@ -89,10 +89,10 @@ describe LegacyArticle do
     describe "all tagged pages" do
       before do
         @cat_tag = LegacyTag.create :name => "Fat Cat"
-        @cat_taggable = LegacyTagging.create :tag_id => @cat_tag.id, :content_type => 'article', :content_foreign_key => @article.id
+        @cat_taggable = LegacyTagging.create :tag_id => @cat_tag.id, :item_type => 'article', :item_id => @article.id
 
-        @mouse_tag = LegacyTag.create :name => "mink-mouse"
-        @mouse_taggable = LegacyTagging.create :content_type => 'article', :content_foreign_key => @article.id, :tag_id => @mouse_tag.id
+        @mouse_tag = LegacyTag.create :name => "mink_mouse"
+        @mouse_taggable = LegacyTagging.create :item_type => 'article', :item_id => @article.id, :tag_id => @mouse_tag.id
 
         Page.delete_all "tag = 'fat_cat' or tag='mini_mouse'"
         @cat_page = create_page :name => 'latest update', :tag => 'fat_cat'

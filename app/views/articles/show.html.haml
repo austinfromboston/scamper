@@ -1,47 +1,24 @@
-%p
-  %b Title:
-  =h @article.title 
-
-%p
-  %b Subtitle:
-  =h @article.subtitle 
-
-%p
-  %b Body:
-  =h @article.body 
-
-%p
-  %b Blurb:
-  =h @article.blurb 
-
-%p
-  %b Metakeywords:
-  =h @article.metakeywords 
-
-%p
-  %b Metadescription:
-  =h @article.metadescription 
-
-%p
-  %b Body html:
-  =h @article.body_html 
-
-%p
-  %b Status:
-  =h @article.status 
-
-%p
-  %b Published at:
-  =h @article.published_at 
-
-%p
-  %b Created at:
-  =h @article.created_at 
-
-%p
-  %b Updated at:
-  =h @article.updated_at 
-
-
+= render :partial => 'article', :object => article
 = link_to 'Edit', edit_article_path(@article)
 = link_to 'Back', articles_path
+
+-#
+  %h2
+    =h @article.title 
+
+  %h3.subtitle
+    =h @article.subtitle 
+
+  %p
+    %b Status:
+    =h @article.status 
+
+  %p
+    %b Published at:
+    =h @article.published_at 
+
+  %p
+    %b Body:
+    =h @article.body_html
+
+

@@ -23,12 +23,12 @@ class LegacyRelatedSection < LegacyData
 
   def confirm_article
     art = Article.find_by_legacy_id articleid
-    unless page
+    unless art
       article = LegacyArticle.find articleid
       art = article.import
     end
     art.id
   rescue
     nil
-  end
+ end
 end
