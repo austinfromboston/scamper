@@ -38,4 +38,9 @@ class LegacySection < LegacyData
   rescue ActiveRecord::RecordNotFound
     nil
   end
+
+  def import
+    return if [ AMP_ROOT, AMP_TRASH ].include?(id)
+    super
+  end
 end

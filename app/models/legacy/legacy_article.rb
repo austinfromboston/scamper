@@ -70,7 +70,8 @@ class LegacyArticle < LegacyData
     :create_class_placements,
     :create_latest_placements,
     :create_tag_placements,
-    :create_section_placements #,
+    :create_section_placements,
+    :create_related_section_placements #,
 #    :place_images
 
   def body_as_html
@@ -116,13 +117,15 @@ class LegacyArticle < LegacyData
 
   def create_class_placements
     return unless AMP_CLASSES_WHICH_AGGREGATE[amp_class]
-    class_page = Page.find_or_create_by_tag AMP_CLASSES_WHICH_AGGREGATE[amp_class]
+    class_page = Page.find_by_tag AMP_CLASSES_WHICH_AGGREGATE[amp_class]
+    class_page ||= Page.create :tag => AMP_CLASSES_WHICH_AGGREGATE[amp_class], :name => AMP_CLASSES_WHICH_AGGREGATE[amp_class].titleize
     imported.placements.create :page => class_page
   end
 
   def create_latest_placements
     return unless read_attribute( :new ) && !read_attribute( :new ).zero?
-    tag_page = Page.find_or_create_by_tag 'new'
+    tag_page = Page.find_by_tag 'new'
+    tag_page ||= Page.create :tag => 'new', :name => 'New items'
     imported.placements.create :page => tag_page
   end
 
@@ -150,6 +153,13 @@ class LegacyArticle < LegacyData
   rescue ActiveRecord::RecordNotFound
     nil
 
+  end
+
+  def create_related_section_placements
+=begin
+    rel_sections = LegacyRelatedSection.find_all_by_articleid id
+    rel_sections.each { |r| r.import }
+=end
   end
 
   def confirm_section_header_placement

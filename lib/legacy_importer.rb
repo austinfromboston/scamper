@@ -10,5 +10,6 @@ class LegacyImporter
     # finish with all other content
     legs = LegacyArticle.all :conditions => [ "amp_class != ?", 8 ]
     legs.each(&:import)
+    LegacyRelatedSection.all( :select => "distinct articleid, typeid" ).each { |r| r.import }
   end
 end

@@ -1,10 +1,15 @@
+%h1 Site
 %p
-  %b Name:
   =h @site.name 
+  =h @site.url
 = link_to 'Edit', edit_site_path(@site)
-= link_to 'Back', sites_path
 
-
+%h2 Landing Page
 = render @site.landing_page
 
+%h2 Root Pages
+= render @site.landing_page.child_pages
+
+%h2 Core Pages
+= render Page.all :conditions => [ "tag is not ? and parent_page_id is ?", nil, nil  ]
 
