@@ -3,10 +3,13 @@ class LegacyData < ActiveRecord::Base
   #import_to_class = nil 
   #callbacks =  { :after_import => [] }
 
-  attr_accessor :imported
-
   establish_connection configurations[ ( Rails.env.test? ? 'legacy_test' : 'legacy' ) ]
   IMPORT_KEYS = {}
+
+  attr_accessor :imported
+  class TrashedItemImport < StandardError; end
+  class OrphanItemImport < StandardError; end
+
   def local_object(klass)
     klass.new local_attributes(klass.name.underscore.to_sym)
   end
@@ -38,10 +41,11 @@ class LegacyData < ActiveRecord::Base
   end
 
   def import
+    log "Importing #{self.class.name} ##{id}"
     self.imported = local_object self.class.import_to_class
     imported.save!
     after_import
-    log "Imported #{self.class.name} ##{id} as #{self.class.import_to_class.name} ##{imported.id}" 
+    log "Success as #{self.class.import_to_class.name} ##{imported.id}" 
     self.imported
   end
 
@@ -50,7 +54,16 @@ class LegacyData < ActiveRecord::Base
   end
 
   def simplify_tag( value )
-    value.downcase.gsub(/[-;,:'\)\(]/, '').gsub( /[^a-z0-9_]/, '_' ).gsub(/_\d{5}_/, '').squeeze '_'
+    value.downcase.
+      # unicode chars begone
+      gsub(/&#\d{4,5};/, '').
+      # punctuation
+      gsub(/[-;,:'\)\(]/, '').
+      # conformance
+      gsub( /[^a-z0-9_]/, '_' ).
+      # extra space
+      squeeze( '_' ).
+      gsub( /_$/, '' )
   end
 
 end

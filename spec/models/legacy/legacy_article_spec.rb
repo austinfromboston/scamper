@@ -112,7 +112,7 @@ describe LegacyArticle do
 
     describe "add sections as tags with parents" do
       before do
-        @section = LegacySection.create :type => "About Us"
+        @section = LegacySection.create :type => "About Us", :parent => LegacySection::AMP_ROOT
         @article.type = @section.id
         Page.delete_all "legacy_id = #{@section.id}"
       end
@@ -148,7 +148,88 @@ describe LegacyArticle do
           @article.imported.primary_page.name.should == @article.title
         end
         it "should set the display type on the created section"
+        describe "section parents" do
+          before do
+            @parent_section = LegacySection.create :type => "stuff", :parent => LegacySection::AMP_ROOT
+            @parent_import = @parent_section.import
+            @section = LegacySection.create :type => "About Us", :parent => @parent_section.id
+            @article.type = @section.id
+            Page.delete_all "legacy_id = #{@section.id}"
+          end
+
+          it "sets the parent on the created section based on the legacy parent" do
+            act!
+            @article.imported.primary_page.parent_pages.should include(@parent_import)
+          end
+        end
+        describe "trashed sections" do
+          before do
+            @section.update_attribute :parent, LegacySection::AMP_TRASH 
+          end
+          it "raises an error" do
+            lambda { act! }.should raise_error( LegacyData::TrashedItemImport )
+          end
+          it "do not import" do
+            begin
+              act!
+            rescue LegacyData::TrashedItemImport
+              @article.kill_tree
+            end
+            Page.find_by_legacy_id( @section.id ).should be_nil
+          end
+        end
+        describe "orphaned sections" do
+          before do
+            @nonexistent_id = 30
+            LegacySection.delete_all( "id  = #{@nonexistent_id}" )
+            @section = LegacySection.create :type => "About Us", :parent => @nonexistent_id
+            @article.type = @section.id
+            #Page.delete_all "legacy_id = #{@section.id}"
+          end
+          it "raise an OrphanItemImport error" do
+            lambda { act! }.should raise_error( LegacyData::OrphanItemImport )
+            #LegacyArticle.find( @article.id ).should_raise (ActiveRecord::RecordNotFound )
+            #LegacySection.find( @section.id ).should_raise (ActiveRecord::RecordNotFound )
+          end
+          it "kills the orphan parent" do
+            begin
+              act! 
+            rescue LegacyData::OrphanItemImport
+              @article.kill_tree
+            end
+            Article.find_by_legacy_id( @article.id ).should be_nil
+            Page.find_by_legacy_id( @section.id ).should be_nil
+          end
+          it "kills the orphan great-grandparent" do
+            section_gg = LegacySection.create :type => "great-grandparent", :parent => @nonexistent_id
+            section_g = LegacySection.create :type => "grandparent", :parent => section_gg.id
+            @section.update_attribute :parent, section_g.id
+
+            begin
+              act! 
+            rescue LegacyData::OrphanItemImport
+              @article.kill_tree
+            end
+
+            Article.find_by_legacy_id( @article.id ).should be_nil
+            Page.find_by_legacy_id( @section.id ).should be_nil
+            Page.find_by_legacy_id( section_g.id ).should be_nil
+            Page.find_by_legacy_id( section_gg.id ).should be_nil
+=begin
+            @article.should_receive(:imported).exactly(3).times.
+              and_return( 
+                         stub( "imported_article", 
+                              :delete => true, 
+                              :delete_all => true, 
+                              :primary_page => stub( "pp", :delete => true )))
+=end
+
+          end
+              
+        end
+        
       end
+
 
     end
   end

@@ -29,12 +29,16 @@ class LegacySection < LegacyData
   end
 
   def confirm_parent_page
-    return unless parent
+    raise OrphanItemImport unless parent
     return if parent == AMP_TRASH
     parent_page = Site.first.landing_page if parent == AMP_ROOT 
     parent_page ||= Page.find_by_legacy_id parent
     unless parent_page
-      parent_section = LegacySection.find parent
+      begin
+        parent_section = LegacySection.find parent
+      rescue ActiveRecord::RecordNotFound
+        raise OrphanItemImport
+      end
       parent_page = parent_section.import
     end
     parent_page.id
@@ -49,7 +53,25 @@ class LegacySection < LegacyData
   end
 
   def import
-    return if [ AMP_ROOT, AMP_TRASH ].include?(id)
+    raise TrashedItemImport if AMP_TRASH == id
+    return if AMP_ROOT == id
     super
+  end
+
+  def kill_tree
+    imported ||= Page.find_by_legacy_id id
+    #log "killing placements for Section #{id}"
+    #imported.placements.delete_all if imported
+    log "killing parent for Section #{id}"
+    lp = LegacySection.find parent
+    lp.kill_tree 
+  rescue 
+    nil
+  ensure
+
+    log "final delete for Section #{id}"
+    imported.delete if imported
+    Page.delete_all "legacy_id = #{id}"
+
   end
 end

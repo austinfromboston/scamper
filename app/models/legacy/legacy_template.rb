@@ -5,7 +5,7 @@ class LegacyTemplate < LegacyData
   import_to :page_layout
 
   IMPORT_KEYS = {
-    :placement => {
+    :page_layout => {
       :html => :import_template,
       :name => :name,
       :legacy_id => :id

@@ -11,5 +11,5 @@ Landing Page
   = render @site.landing_page.child_pages
 
 %h2 Core Pages
-= render Page.all :conditions => [ "tag is not ? and parent_page_id is ?", nil, nil  ]
+= render Page.all :include => :parent_placements, :conditions => [ "tag is not ? and placements.id is ?", nil, nil  ]
 

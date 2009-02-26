@@ -161,7 +161,7 @@ class LegacyArticle < LegacyData
     section_page = Page.find_by_legacy_id type
     unless section_page
       section = LegacySection.find type
-      return nil if section.parent == LegacySection::AMP_TRASH
+      raise TrashedItemImport if section.parent == LegacySection::AMP_TRASH
       section_page = section.import  
     end
     imported.placements.create :page => section_page, :list_order => pageorder
@@ -181,7 +181,12 @@ class LegacyArticle < LegacyData
     return unless type
     section_page = Page.find_by_legacy_id type
     unless section_page
-      section = LegacySection.find type
+      begin
+        section = LegacySection.find type
+      rescue ActiveRecord::RecordNotFound
+        raise OrphanItemImport
+      end
+      raise TrashedItemImport if section.parent == LegacySection::AMP_TRASH
       section_page = section.import #Page.create :tag => simplify_tag( section.type ), :name => title
       section_page.update_attributes :name => title
     end
@@ -193,6 +198,22 @@ class LegacyArticle < LegacyData
   def import
     return if Article.find_by_legacy_id id
     super
+  end
+
+  def kill_tree
+    log "killing tree for LA #{id}"
+    imported ||= Article.find_by_legacy_id id
+    imported.primary_page.delete if imported.primary_page
+    log "killing placements for LA #{id}"
+    imported.placements.delete_all
+    section = LegacySection.find type
+    section.kill_tree
+  rescue 
+    nil
+  ensure
+    log "final delete for LA #{id}"
+    imported.delete if imported
+
   end
 
 
