@@ -1,0 +1,2 @@
+module PageLayoutsHelper
+end

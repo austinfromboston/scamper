@@ -1,0 +1,12 @@
+%h2= "PageLayout \"#{@page_layout.to_param}\""
+- content_tag_for :div, @page_layout do
+  %ul
+    %li
+      %strong Name:
+      =h @page_layout.name
+    %li
+      %strong Body:
+      = @page_layout.html
+%ul
+  %li= link_to 'Edit', edit_page_layout_path(@page_layout)
+  %li= link_to 'Back', page_layouts_path

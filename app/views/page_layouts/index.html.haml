@@ -1,0 +1,8 @@
+%h2 Listing page_layouts
+- if !@page_layouts.empty?
+  .page_layouts
+    = render :partial => "page_layout", :collection => @page_layouts
+  = will_paginate(@page_layouts)
+- else
+  %p There are no page_layouts to show yet.
+= link_to 'New page_layout', new_page_layout_path

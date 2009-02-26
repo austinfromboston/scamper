@@ -1,0 +1,5 @@
+%h2 Editing page_layout
+= render :partial => "form", :locals => {:page_layout => @page_layout}
+%ul
+  %li= link_to 'Show', @page_layout
+  %li= link_to 'Back', page_layouts_path

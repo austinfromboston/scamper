@@ -1,0 +1,16 @@
+- form_for(page_layout) do |f|
+  = f.error_messages
+  %p
+    = f.label :name
+    %br
+    = f.text_field :name
+  %p
+    = f.label :html
+    %br
+    = f.text_area :html
+  %p
+    = f.label :legacy_id
+    %br
+    = f.text_field :legacy_id
+  %p
+    = f.submit "Submit"
