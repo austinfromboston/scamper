@@ -13,21 +13,42 @@ class LegacyTemplate < LegacyData
   }
 
   def import_template
-    import_header + ( default_body % header2 )
+    import_header + ( default_body % convert_urls( convert_tokens(header2)) )
   end
 
-  def convert_body_tokens
-    header2.gsub  /(\{\{|<\?php)([^\}>]+)(\}\}|\?>)/, '<div class="import-token">The following is PHP: \1</div>'
+  def convert_tokens(source)
+    source.gsub(  /(\{\{|<\?php)([^\}>]+)(\}\}|\?>)/, '<div class="import-token">PHP: \2</div>' ).
+      gsub(/\[-body-\]/, "{{body}}" ).
+      gsub(/\[-left nav-\]/, "{{blocks['left']}}").
+      gsub( /\[-right nav-\]/, "{{blocks['right']}}" )
+  end
+
+  def convert_urls(source)
+    source.gsub( /src=\s*(["'])(img|custom|scripts)/, 'src=\1/legacy/\2' )
   end
 
   def default_body
-    "<body>%s</body>"
+    "%s"
   end
   def import_header
-    default_header % extra_header
+    default_header % convert_urls(extra_header)
   end
   def default_header
-    "<head>%s</head>"
+    "<head>#{LEGACY_HEADER}%s</head>"
   end
+
+  LEGACY_HEADER = <<-HEADER
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="/legacy/styles_default.css" id="default">
+
+<link rel="stylesheet" type="text/css" href="/legacy/custom/styles.css">
+<style type='text/css'>
+img.thumb {
+    border:0;
+    width: 101px;
+    max-height: 300px;
+}</style>
+<script language="Javascript"  type="text/javascript" src="/legacy/scripts/functions.js"></script>
+HEADER
 
 end
