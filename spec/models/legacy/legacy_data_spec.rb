@@ -17,7 +17,7 @@ describe LegacyData do
     end
 
     it "calls local object" do
-      fake_article =stub( 'fake_article').as_null_object 
+      fake_article =stub( 'fake_article', :id => 5).as_null_object 
       @article.stub!(:local_object).and_return( fake_article )
       @article.should_receive(:local_object).with(Article)
       act!

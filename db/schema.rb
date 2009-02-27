@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090225231459) do
+ActiveRecord::Schema.define(:version => 20090227063348) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(:version => 20090225231459) do
     t.text     "metadescription"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "page_layout_id"
   end
 
   create_table "placements", :force => true do |t|
@@ -56,6 +57,7 @@ ActiveRecord::Schema.define(:version => 20090225231459) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "child_page_id"
+    t.string   "block"
   end
 
   create_table "sites", :force => true do |t|
