@@ -57,6 +57,13 @@ class LegacyImporter
 
     template_tree( LegacySection.find( LegacySection::AMP_ROOT ), 
                   templated_sections.map(&:id) ) unless templated_sections.empty?
+    # oh yeah, classes have templates too!
+    templated_classes = LegacyClass.all :conditions => [ "templateid is not ? and templateid != ?", nil, 0 ]
+    templated_classes.each do |t_class|
+      class_page = Page.find_by_tag_and_legacy_id t_class.simple_name, nil
+      imported_layout = PageLayout.find_by_legacy_id t_class.templateid
+      class_page.update_attribute( :page_layout_id, imported_layout.id ) if imported_layout and class_page
+    end
   end
 
   def template_tree( legacy_section, templated_sections )

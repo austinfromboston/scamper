@@ -9,6 +9,14 @@ class LegacyTemplate < LegacyData
       :html => :import_template,
       :name => :name,
       :legacy_id => :id
+    },
+    :left_nav => {
+      :html => lambda { nav_template "left" },
+      :name => lambda { "#{name} ( left nav )" }
+    },
+    :right_nav => {
+      :html => lambda { nav_template "right" },
+      :name => lambda { "#{name} ( right nav )" }
     }
   }
 
@@ -30,9 +38,11 @@ class LegacyTemplate < LegacyData
   def default_body
     "%s"
   end
+
   def import_header
     default_header % convert_urls(extra_header)
   end
+
   def default_header
     "<head>#{LEGACY_HEADER}%s</head>"
   end
@@ -50,5 +60,24 @@ img.thumb {
 }</style>
 <script language="Javascript"  type="text/javascript" src="/legacy/scripts/functions.js"></script>
 HEADER
+
+  def import_nav(nav_block)
+    PageLayout.create local_attributes  "#{nav_block}_nav".to_sym
+  end
+
+  def nav_template(nav_block)
+    LEGACY_NAV % nav_block    
+  end
+
+  LEGACY_NAV = <<-NAV
+<div class="nav_block" id="%s_nav">
+{% for placement in placements %}
+  <div class="nav_element_nav_position_{{forloop.index}}" id="nav_id_{{placement['article']['legacy_id']}}>
+    {{ placement | display }}
+  </div>
+{% endfor %}
+</div>
+NAV
+
 
 end
