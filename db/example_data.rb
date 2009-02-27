@@ -12,5 +12,9 @@ module FixtureReplacement
     a.name = "test"
   end
 
+  attributes_for :page_layout do |a|
+    a.name = "test"
+  end
+
 end
 
