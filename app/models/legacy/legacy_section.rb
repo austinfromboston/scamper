@@ -12,13 +12,14 @@ class LegacySection < LegacyData
     :page => {
       :name => :type,
       :tag  => :simple_name,
-      #:parent_page_id => :confirm_parent_page,
+      :parent_page_id => :confirm_parent_page,
+      :tree_order => :textorder,
       :redirect_to => :linkurl,
       :legacy_id => :id,
       :created_at => :timestamp
     }
   }
-  after_import :create_primary_placement
+  #after_import :create_primary_placement
 
   def set_defaults
     self.timestamp ||= Time.now
@@ -46,11 +47,13 @@ class LegacySection < LegacyData
     nil
   end
 
+=begin
   def create_primary_placement
     parent_page_id = confirm_parent_page
     return unless parent_page_id
     imported.parent_placements.create :page_id => parent_page_id, :canonical => true, :list_order => textorder
   end
+=end
 
   def import
     raise TrashedItemImport if AMP_TRASH == id

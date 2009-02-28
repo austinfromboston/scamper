@@ -82,6 +82,10 @@ class LegacyImporter
     page.child_pages.each { |cp| apply_template_to_tree( cp, layout_id ) }
   end
 
+  def do_nav_layouts
+    LegacyNavLayout.all.each { |nl| nl.import; nl.nav_side = 'right'; nl.import }
+  end
+
   def self.run
     importer = LegacyImporter.new
     importer.do_site
@@ -91,6 +95,7 @@ class LegacyImporter
     importer.do_related_sections
 
     importer.do_template_inheritance
+    importer.do_nav_layouts
 
 
   end

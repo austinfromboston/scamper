@@ -159,7 +159,8 @@ describe LegacyArticle do
 
           it "sets the parent on the created section based on the legacy parent" do
             act!
-            @article.imported.primary_page.parent_pages.should include(@parent_import)
+            #@article.imported.primary_page.parent_pages.should include(@parent_import)
+            @article.imported.primary_page.parent_page.should == @parent_import
           end
         end
         describe "trashed sections" do

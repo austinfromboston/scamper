@@ -12,6 +12,11 @@ namespace :legacy do
     imp = LegacyImporter.new
     imp.do_templates
   end
+  task :import_navs do
+    Page.delete_all [ "legacy_type like ?", '%nav_layout%' ] if ENV["DROP"]
+    imp = LegacyImporter.new
+    imp.do_nav_layouts
+  end
 end
 
 

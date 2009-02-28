@@ -3,4 +3,4 @@ Items:
 = page.articles.size
 
 .map-children
-  = render :partial => 'pages/map', :collection => page.child_pages.all( :order => "list_order" ), :as => :page
+  = render :partial => 'pages/map', :collection => page.child_pages.all, :as => :page

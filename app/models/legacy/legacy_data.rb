@@ -16,9 +16,14 @@ class LegacyData < ActiveRecord::Base
   def local_attributes(object_name)
     local_keys = self.class.const_get(:IMPORT_KEYS)[object_name]
     local_keys.inject({}) do |memo, ( local_key, my_key ) |
-      memo.merge local_key => ( my_key.is_a?(Proc) ? 
-                                instance_eval(my_key) : 
-                                self.send( my_key ) )
+      key_value = case; 
+                  when my_key.is_a?(Proc): my_key.call(self)
+                  when my_key.is_a?(Symbol): self.send(my_key)
+                  else my_key
+                  end
+      memo.merge local_key =>  key_value
+                             
+                            
     end
   end
 

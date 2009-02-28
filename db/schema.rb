@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090227063348) do
+ActiveRecord::Schema.define(:version => 20090228185333) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(:version => 20090227063348) do
     t.integer  "updated_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "legacy_type",   :limit => 20
   end
 
   create_table "page_layouts", :force => true do |t|
@@ -32,6 +33,7 @@ ActiveRecord::Schema.define(:version => 20090227063348) do
     t.integer  "legacy_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "legacy_type", :limit => 20
   end
 
   create_table "pages", :force => true do |t|
@@ -46,6 +48,8 @@ ActiveRecord::Schema.define(:version => 20090227063348) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "page_layout_id"
+    t.string   "legacy_type",     :limit => 20
+    t.integer  "tree_order"
   end
 
   create_table "placements", :force => true do |t|
