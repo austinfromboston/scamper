@@ -16,7 +16,6 @@ class LegacyImporter
         puts "Deleting LegacyArticle #{la.id} as this item is TRASH"
         la.kill_tree
       end
-      raise "created now" if Page.find_by_legacy_id 25
     end
   end
 
@@ -60,14 +59,14 @@ class LegacyImporter
     # oh yeah, classes have templates too!
     templated_classes = LegacyClass.all :conditions => [ "templateid is not ? and templateid != ?", nil, 0 ]
     templated_classes.each do |t_class|
-      class_page = Page.find_by_tag_and_legacy_id t_class.simple_name, nil
+      class_page = Page.find_by_legacy_type_and_legacy_id 'class', t_class.id
       imported_layout = PageLayout.find_by_legacy_id t_class.templateid
       class_page.update_attribute( :page_layout_id, imported_layout.id ) if imported_layout and class_page
     end
   end
 
   def template_tree( legacy_section, templated_sections )
-    lp = Page.find_by_legacy_id( legacy_section.id ) 
+    lp = Page.find_by_legacy_id_and_legacy_type( legacy_section.id,'section' ) 
     if lp && templated_sections.include?( legacy_section.id )
       apply_template_to_tree( lp, PageLayout.find_by_legacy_id( legacy_section.templateid ) )
     else
@@ -83,7 +82,17 @@ class LegacyImporter
   end
 
   def do_nav_layouts
+    LegacyNavLayout.find_by_section_id LegacySection::AMP_ROOT
     LegacyNavLayout.all.each { |nl| nl.import; nl.nav_side = 'right'; nl.import }
+  end
+
+  def do_nav_elements
+    LegacyNav.all.each { |nav| nav.import }
+  end
+
+  def do_navs
+    do_nav_layouts
+    do_nav_elements
   end
 
   def self.run
@@ -95,7 +104,7 @@ class LegacyImporter
     importer.do_related_sections
 
     importer.do_template_inheritance
-    importer.do_nav_layouts
+    importer.do_navs
 
 
   end

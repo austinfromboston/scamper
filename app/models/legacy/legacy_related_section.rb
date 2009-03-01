@@ -11,7 +11,7 @@ class LegacyRelatedSection < LegacyData
   }
 
   def confirm_section
-    page = Page.find_by_legacy_id typeid
+    page = Page.find_by_legacy_id_and_legacy_type typeid, 'section'
     unless page
       section = LegacySection.find typeid
       page = section.import
@@ -22,7 +22,7 @@ class LegacyRelatedSection < LegacyData
   end
 
   def confirm_article
-    art = Article.find_by_legacy_id articleid
+    art = Article.find_by_legacy_id_and_legacy_type articleid, 'article'
     unless art
       article = LegacyArticle.find articleid
       art = article.import

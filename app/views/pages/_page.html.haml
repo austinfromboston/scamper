@@ -6,6 +6,8 @@
   .tag
     = page.tag
   = link_to 'Edit', edit_page_path(page), :class => "edit button"
+  Items:
+  = page.placements.count
 
   =# page.parent_pages.each do |pp|
   = if page.parent_page

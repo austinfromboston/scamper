@@ -38,6 +38,7 @@ class LegacyArticle < LegacyData
   IMPORT_KEYS = {
     :article => {
       :legacy_id => :id,
+      :legacy_type => 'article',
       :title => :title,
       :subtitle => :subtitile,
       :body_html => :body_as_html,
@@ -158,7 +159,7 @@ class LegacyArticle < LegacyData
   def create_section_placements
     return unless type
     return if amp_class == AMP_CLASSES['section_header']
-    section_page = Page.find_by_legacy_id type
+    section_page = Page.find_by_legacy_id_and_legacy_type type, "section"
     unless section_page
       section = LegacySection.find type
       raise TrashedItemImport if section.parent == LegacySection::AMP_TRASH
@@ -179,7 +180,7 @@ class LegacyArticle < LegacyData
 
   def confirm_section_header_placement
     return unless type
-    section_page = Page.find_by_legacy_id type
+    section_page = Page.find_by_legacy_id_and_legacy_type type, "section"
     unless section_page
       begin
         section = LegacySection.find type
@@ -196,13 +197,13 @@ class LegacyArticle < LegacyData
   end
 
   def import
-    return if Article.find_by_legacy_id id
+    return if Article.find_by_legacy_id_and_legacy_type id, 'article'
     super
   end
 
   def kill_tree
     log "killing tree for LA #{id}"
-    imported ||= Article.find_by_legacy_id id
+    imported ||= Article.find_by_legacy_id_and_legacy_type id, "article"
     imported.primary_page.delete if imported.primary_page
     log "killing placements for LA #{id}"
     imported.placements.delete_all

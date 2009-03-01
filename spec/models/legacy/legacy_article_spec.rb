@@ -10,7 +10,7 @@ describe LegacyArticle do
   end
 
   it "does not import if an article with the same legacy id already exists" do
-    existing_article = create_article :legacy_id => @article.id
+    existing_article = create_article :legacy_id => @article.id, :legacy_type => 'article'
     lambda { act! }.should_not change( Article, :count )
   end
   describe "attributes:" do
@@ -122,7 +122,7 @@ describe LegacyArticle do
       end
 
       it "should use the existing page when one has already been created" do
-        section_page = Page.create :tag => 'about_us', :legacy_id => @section.id
+        section_page = Page.create :tag => 'about_us', :legacy_id => @section.id, :legacy_type => 'section'
         act!
         @article.imported.pages.should include( section_page )
       end
@@ -133,7 +133,7 @@ describe LegacyArticle do
         end
 
         it "uses the section page as it primary page if the section page already exists" do
-          section_page = Page.create :tag => 'about_us', :legacy_id => @section.id
+          section_page = Page.create :tag => 'about_us', :legacy_id => @section.id, :legacy_type => 'section'
           act!
           @article.imported.primary_page.should == section_page
         end

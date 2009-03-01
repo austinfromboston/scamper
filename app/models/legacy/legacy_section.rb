@@ -13,9 +13,10 @@ class LegacySection < LegacyData
       :name => :type,
       :tag  => :simple_name,
       :parent_page_id => :confirm_parent_page,
-      :tree_order => :textorder,
+      :tree_order => lambda { |ls| ls.textorder if ls.textorder and !ls.textorder.zero? },
       :redirect_to => :linkurl,
       :legacy_id => :id,
+      :legacy_type => 'section',
       :created_at => :timestamp
     }
   }
@@ -33,7 +34,7 @@ class LegacySection < LegacyData
     raise OrphanItemImport unless parent
     return if parent == AMP_TRASH
     parent_page = Site.first.landing_page if parent == AMP_ROOT 
-    parent_page ||= Page.find_by_legacy_id parent
+    parent_page ||= Page.find_by_legacy_id_and_legacy_type( parent, 'section' )
     unless parent_page
       begin
         parent_section = LegacySection.find parent
@@ -62,7 +63,7 @@ class LegacySection < LegacyData
   end
 
   def kill_tree
-    imported ||= Page.find_by_legacy_id id
+    imported ||= Page.find_by_legacy_id_and_legacy_type id, 'section'
     #log "killing placements for Section #{id}"
     #imported.placements.delete_all if imported
     log "killing parent for Section #{id}"
@@ -74,7 +75,7 @@ class LegacySection < LegacyData
 
     log "final delete for Section #{id}"
     imported.delete if imported
-    Page.delete_all "legacy_id = #{id}"
+    Page.delete_all [ "legacy_id = ? and legacy_type = ?", id, "section" ]
 
   end
 end

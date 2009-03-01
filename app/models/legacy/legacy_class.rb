@@ -7,8 +7,10 @@ class LegacyClass < LegacyData
   IMPORT_KEYS = {
     :page => {
       :tag => :simple_name,
-      :name => :amp_class
-  }
+      :name => :amp_class,
+      :legacy_id => :id,
+      :legacy_type => 'class'
+    }
   }
   def simple_name
     simplify_tag amp_class

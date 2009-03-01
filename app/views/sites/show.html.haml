@@ -13,3 +13,5 @@ Landing Page
 %h2 Core Pages
 = render Page.all :conditions => [ "tag is not ? and parent_page_id is ?", nil, nil  ]
 
+%h2 Nav Layout Blocks 
+= render Page.all :conditions => [ "legacy_type like ?", '%nav_layout%'  ]
