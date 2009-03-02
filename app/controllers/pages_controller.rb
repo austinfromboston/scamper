@@ -1,10 +1,36 @@
 class PagesController < ApplicationController
   make_resourceful do
-    actions :all
+    #actions :all
   end
+
+  helper_method :render_to_string
   def show
+
+=begin
+    blocks = [ 'left', 'right' ] 
+    r_blocks = Hash[ *blocks.map do |bloc|
+      placement = @page.placements.find_all_by_block bloc
+      block_template = Liquid::Template.parse( placement.child_page.page_layout.html )
+      [ bloc, "#{bloc.upcase}: #{block_template.render( 'placements' => placement.child_page.placements.ordered, 'block_name' => bloc )}" ]
+    end.flatten ]
+=end
+=begin
+    cx = self
+    render_helper = Module.new do
+      def render_to_string(*args)
+        cx.send :render_to_string, *args
+      end
+    end
+    #Liquid::Template.register_filter(render_helper)
+=end
+
     @page = Page.find params[:id]
-    @template = Liquid::Template.parse( PageLayout.find(3).html )
-    @template.render 'body' => @page.primary_article.body_html, 'blocks' => { 'left' => "Left Nav Here", 'right' => "Right Nav Here" }
+    Liquid::Template.register_filter(ApplicationHelper)
+    @template = Liquid::Template.parse( @page.page_layout.html )
+    @template.render( 'page' => @page ) 
+
+      #{ 'blocks' => 
+      #{ 'body'  => @page.primary_article.body_html }.merge( rendered_blocks ) }, 
+      #  :filters => [ApplicationHelper] )
   end
 end

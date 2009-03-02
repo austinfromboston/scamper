@@ -54,7 +54,7 @@ class LegacyNavLayout < LegacyData
 
     if introtext_id  == AMP_INTROTEXTS['content']
       log "Creating default navs for all pages"
-      Page.all.each do |page|
+      Page.all(:conditions => ["legacy_type not like ?", "%nav_layout%" ] ).each do |page|
         next if page.placements.find_by_block nav_side
         page.placements.create :child_page_id => imported.id, :block => nav_side, :display => "#{nav_side}_nav"
       end

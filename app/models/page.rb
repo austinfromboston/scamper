@@ -10,6 +10,10 @@ class Page < ScamperBase
   belongs_to :parent_page, :class_name => "Page"
   has_many :child_pages, :class_name => "Page", :foreign_key => "parent_page_id", :order => 'tree_order'
 
+  belongs_to :page_layout
+
+  liquid_methods :name, :url, :tag, :parent_page, :metakeywords, :metadescription, :id, :placements
+
   def descendents
     child_pages.inject(child_pages) do |all_pages, page|
       all_pages << page.child_pages.map { |p| p.descendents }

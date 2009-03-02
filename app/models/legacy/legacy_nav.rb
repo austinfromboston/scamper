@@ -31,13 +31,17 @@ class LegacyNav < LegacyData
     body = ''
     body += nosqlcode if nosqlcode && !nosqlcode.blank?
     body += "SQL: #{sql_statement}\n\n" if sql_statement && !sql_statement.blank?
-    body += "PHP include #{include_file}, calls #{include_function} and says \n #{include_function_args}\n" if include_file and !include_file.blank?
-    body += "Morelink: #{mfile}\n" if mfile
-    body += "Link results to ( article.php or #{linkfile} )\n" if linkfile
-    body += "Request var: ( id || #{mvar1} )\n" if mvar1
-    body += "Request var: ( typeid || #{mcall2} )\n" if mcall1
-    body += "Limit results to: ( 20 || #{list_limit} )\n" if list_limit
-    body += "Title Image: #{titleimg}" if titleimg
+    body += "PHP include #{include_file}" if include_file and !include_file.blank?
+    body += ", calls #{include_function}" if include_function and !include_function.blank? 
+    body += "and says \n #{include_function_args}\n" if include_function_args and !include_function_args.blank? 
+    body += "Morelink: #{mfile}\n" if mfile and !mfile.blank?
+    body += "Link results to ( article.php or #{linkfile} )\n" if linkfile and !linkfile.blank?
+    body += "Request var: ( id || #{mvar1} )\n" if mvar1 and !mvar1.blank?
+    body += "Request var: ( typeid || #{mcall2} )\n" if mcall2 and !mcall2.blank?
+    body += "Limit results to: ( 20 || #{list_limit} )\n" if list_limit and !list_limit.blank?
+    body += "Title Image: #{titleimg}\n" if titleimg and !titleimg.blank?
+    body += "RSS Feed: #{rss}\n" if rss and !rss.blank?
+    body += "Legacy nav: #{id}\n"
     body
   end
 

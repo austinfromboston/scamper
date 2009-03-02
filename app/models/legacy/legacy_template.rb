@@ -22,13 +22,13 @@ class LegacyTemplate < LegacyData
 
   def convert_tokens(source)
     source.gsub(  /(\{\{|<\?php)([^\}>]+)(\}\}|\?>)/, '<div class="import-token">PHP: \2</div>' ).
-      gsub(/\[-body-\]/, "{{body}}" ).
-      gsub(/\[-left nav-\]/, "{{blocks['left']}}").
-      gsub( /\[-right nav-\]/, "{{blocks['right']}}" )
+      gsub(/\[-body-\]/, "{{ page | layout_area }}" ).
+      gsub(/\[-(left|right) nav-\]/, 
+           '<div class="nav_block" id="block_\1">{{ page | layout_area: "\1" }}</div>' )
   end
 
   def convert_urls(source)
-    source.gsub( /src=\s*(["'])(img|custom|scripts)/, 'src=\1/legacy/\2' )
+    source.gsub( /(["'])(img|custom|scripts)/, '\1/legacy/\2' )
   end
 
   def default_body
@@ -68,13 +68,11 @@ HEADER
   end
 
   LEGACY_NAV = <<-NAV
-<div class="nav_block" id="block_{{block_name}}">
-{% for placement in placements %}
+{% for placement in page.placements %}
   <div class="nav_position_{{forloop.index}}">
-    {{ placement | display }}
+    {{ placement | display_placement }}
   </div>
 {% endfor %}
-</div>
 NAV
 
 
