@@ -22,9 +22,9 @@ class LegacyTemplate < LegacyData
 
   def convert_tokens(source)
     source.gsub(  /(\{\{|<\?php)([^\}>]+)(\}\}|\?>)/, '<div class="import-token">PHP: \2</div>' ).
-      gsub(/\[-body-\]/, "{{ page | layout_area }}" ).
+      gsub(/\[-body-\]/, "{% layout_area %}" ).
       gsub(/\[-(left|right) nav-\]/, 
-           '<div class="nav_block" id="block_\1">{{ page | layout_area: "\1" }}</div>' )
+           '<div class="nav_block" id="block_\1">{% layout_area \1%}</div>' )
   end
 
   def convert_urls(source)
@@ -70,7 +70,7 @@ HEADER
   LEGACY_NAV = <<-NAV
 {% for placement in page.placements %}
   <div class="nav_position_{{forloop.index}}">
-    {{ placement | display_placement }}
+    {{ place placement }}
   </div>
 {% endfor %}
 NAV

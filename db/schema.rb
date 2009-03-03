@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090228185333) do
+ActiveRecord::Schema.define(:version => 20090303175653) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(:version => 20090228185333) do
     t.integer  "article_id"
     t.integer  "page_id"
     t.integer  "list_order"
-    t.string   "display"
+    t.string   "view_type"
     t.boolean  "canonical"
     t.datetime "created_at"
     t.datetime "updated_at"

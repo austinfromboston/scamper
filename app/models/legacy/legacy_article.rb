@@ -65,7 +65,7 @@ class LegacyArticle < LegacyData
     },
     :placement => {
       #:list_order => :pageorder,
-      :display => :class_as_named_display
+      :view_type => :class_as_named_display
     }
   }
 
@@ -191,7 +191,7 @@ class LegacyArticle < LegacyData
       section_page = section.import #Page.create :tag => simplify_tag( section.type ), :name => title
       section_page.update_attributes :name => title
     end
-    imported.placements.create :page => section_page, :canonical => true, :display => "header"
+    imported.placements.create :page => section_page, :canonical => true, :view_type => "header"
   rescue ActiveRecord::RecordNotFound
     nil
   end

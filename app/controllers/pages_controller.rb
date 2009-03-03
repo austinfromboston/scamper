@@ -25,9 +25,12 @@ class PagesController < ApplicationController
 =end
 
     @page = Page.find params[:id]
-    Liquid::Template.register_filter(ApplicationHelper)
-    @template = Liquid::Template.parse( @page.page_layout.html )
-    @template.render( 'page' => @page ) 
+    #Liquid::Template.register_filter(ApplicationHelper)
+    Liquid::Template.register_tag('layout_area', LayoutAreaTag)
+    Liquid::Template.register_tag('place', PlaceTag)
+    xtemplate = Liquid::Template.parse( @page.page_layout.html )
+    page_html = xtemplate.render!( { 'page' => @page } , :registers => { :controller => self } ) 
+    render :text => page_html
 
       #{ 'blocks' => 
       #{ 'body'  => @page.primary_article.body_html }.merge( rendered_blocks ) }, 

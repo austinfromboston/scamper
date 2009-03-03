@@ -17,14 +17,13 @@ module ApplicationHelper
   end
 
   def display_placement( placement )
-    return 'NOTHING' unless placement.child_page || placement.article 
     return display_page( placement.child_page ) if placement.child_page
+    #if placement.display
     display_article placement.article
   end
 
   def display_article( art )
-    @article = art
-    #return render_to_string 'articles/_default'
+    #@article = art
     template = "
 <div class='display_article'>
 <h1 class='title'>#{art.title}</h1>
