@@ -19,4 +19,13 @@ class Page < ScamperBase
       all_pages << page.child_pages.map { |p| p.descendents }
     end.flatten.uniq
   end
+
+  def ancestors
+    return [] unless parent_page
+    parent_page.ancestors.unshift parent_page
+  end
+
+  def landing_page?
+    Site.find_by_landing_page_id id
+  end
 end

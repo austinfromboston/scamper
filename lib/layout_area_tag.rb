@@ -10,13 +10,13 @@ class LayoutAreaTag < Liquid::Tag
 
   def render(context)
 
-    placements = context.scopes[0]['page'].placements.ordered.find_all_by_block block_name
+    placements = context.scopes.last['page'].placements.ordered.find_all_by_block block_name
     placements.inject("") do |text, pl|
       if pl.child_page
         layout_area_layout = Liquid::Template.parse( pl.child_page.page_layout.html )
-        text << layout_area_layout.render( { 'page' => pl.child_page}, { :registers => context.registers } )
+        text << layout_area_layout.render!( { 'page' => pl.child_page, 'current_page' => context.scopes.last['page'] }, { :registers => context.registers } )
       elsif pl.article
-        text << render_erb( context, 'articles/default', { :article => pl.article } )
+        text << render_erb( context, 'articles/default', { :article => pl.article, :current_page => context.scopes.last['current_page'] } )
       end
       text
     end

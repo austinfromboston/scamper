@@ -9,9 +9,9 @@ class PlaceTag < Liquid::Tag
 
   def render(context)
     self.placement_var_name ||= 'placement'
-    placement = context.scopes[0][placement_var_name]
+    placement = context.scopes.first[placement_var_name]
     view_type = placement.view_type || 'default'
-    render_erb( context, "articles/#{view_type}", { :article => placement.article } )
+    render_erb( context, "articles/#{view_type}", { :article => placement.article, :current_page => context.scopes.last['current_page'] } )
   end
 
 end

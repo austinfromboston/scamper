@@ -29,7 +29,7 @@ class PagesController < ApplicationController
     Liquid::Template.register_tag('layout_area', LayoutAreaTag)
     Liquid::Template.register_tag('place', PlaceTag)
     xtemplate = Liquid::Template.parse( @page.page_layout.html )
-    page_html = xtemplate.render!( { 'page' => @page } , :registers => { :controller => self } ) 
+    page_html = xtemplate.render!( { 'page' => @page, 'current_page' => @page } , :registers => { :controller => self } ) 
     render :text => page_html
 
       #{ 'blocks' => 
