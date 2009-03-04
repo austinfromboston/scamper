@@ -70,7 +70,7 @@ HEADER
   LEGACY_NAV = <<-NAV
 {% for placement in page.placements %}
   <div class="nav_position_{{forloop.index}}">
-    {{ place placement }}
+    {% place placement %}
   </div>
 {% endfor %}
 NAV

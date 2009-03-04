@@ -6,16 +6,18 @@ class LegacyRelatedSection < LegacyData
   IMPORT_KEYS = {
     :placement => {
       :article_id => :confirm_article,
-      :page_id => :confirm_section
+      :page_id => :confirm_section,
+      :view_type => lambda { |rl| 
+          section = LegacySection.find (rl.typeid)
+          'hidden' if section && section.usetype 
+      }
     }
   }
 
   def confirm_section
     page = Page.find_by_legacy_id_and_legacy_type typeid, 'section'
-    unless page
-      section = LegacySection.find typeid
-      page = section.import
-    end
+    section = LegacySection.find typeid
+    page ||= section.import
     page.id
   rescue
     nil

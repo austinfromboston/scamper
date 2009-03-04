@@ -160,12 +160,12 @@ class LegacyArticle < LegacyData
     return unless type
     return if amp_class == AMP_CLASSES['section_header']
     section_page = Page.find_by_legacy_id_and_legacy_type type, "section"
+    section = LegacySection.find type
     unless section_page
-      section = LegacySection.find type
       raise TrashedItemImport if section.parent == LegacySection::AMP_TRASH
       section_page = section.import  
     end
-    imported.placements.create :page => section_page, :list_order => pageorder
+    imported.placements.create :page => section_page, :list_order => pageorder, :view_type => ( 'hidden' if section.usetype )
   rescue ActiveRecord::RecordNotFound
     nil
 
