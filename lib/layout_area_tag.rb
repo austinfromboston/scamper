@@ -16,7 +16,8 @@ class LayoutAreaTag < Liquid::Tag
         layout_area_layout = Liquid::Template.parse( pl.child_page.page_layout.html )
         text << layout_area_layout.render!( { 'page' => pl.child_page, 'current_page' => context.scopes.last['page'] }, { :registers => context.registers } )
       elsif pl.article
-        text << render_erb( context, 'articles/default', { :article => pl.article, :current_page => context.scopes.last['current_page'] } )
+        view_type = pl.view_type || 'default'
+        text << render_erb( context, "articles/#{view_type}", { :article => pl.article, :current_page => context.scopes.last['current_page'] } )
       end
       text
     end
