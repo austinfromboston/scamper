@@ -17,7 +17,7 @@ class LegacyTemplate < LegacyData
   }
 
   def import_template
-    import_header + ( default_body % convert_urls( convert_tokens(header2)) )
+    import_header + import_body
   end
 
   def convert_tokens(source)
@@ -29,6 +29,16 @@ class LegacyTemplate < LegacyData
 
   def convert_urls(source)
     source.gsub( /(["'])(img|custom|scripts)/, '\1/legacy/\2' )
+  end
+
+  def import_body
+    js_loader = "{% custom_block load_javascript %}"
+    if header2 =~ /<\/body>/
+      new_body = header2.gsub /(<\/body>)/, js_loader + '\1'
+    else
+      new_body = header2 + js_loader
+    end
+    ( default_body % convert_urls( convert_tokens(new_body)) )
   end
 
   def default_body
@@ -55,6 +65,7 @@ img.thumb {
     max-height: 300px;
 }</style>
 <script language="Javascript"  type="text/javascript" src="/legacy/scripts/functions.js"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/site.css">
 HEADER
 
   def import_nav

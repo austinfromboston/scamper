@@ -1,4 +1,4 @@
-#require 'legacy/article'
+#require 'legacy/site'
 class LegacyImporter
   def do_site
     @site = LegacySite.find 1

@@ -1,0 +1,15 @@
+= javascript_include_tag 'jquery'
+= javascript_include_tag 'plugins/jquery.livequery.js'
+= javascript_include_tag 'plugins/jquery.form.js'
+
+= yield :javascript_lib
+- javascript_tag do
+  $('.js-hide').livequery( function() { $(this).hide(); } );
+  $('.js-only').livequery( function() { $(this).removeClass('js-only'); } );
+
+  $( function() {
+  = yield :dom_ready
+  } );
+
+
+

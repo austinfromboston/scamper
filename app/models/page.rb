@@ -1,6 +1,6 @@
 class Page < ScamperBase
   #establish_connection
-  has_many :placements
+  has_many :placements, :order => 'list_order'
   has_many :articles, :through => :placements, :conditions => [ "placements.article_id is not ?", nil ]
   has_one :primary_article, :through => :placements, :conditions => [ 'canonical = ?', true], :class_name => "Article", :source => :article
 
@@ -11,6 +11,7 @@ class Page < ScamperBase
   has_many :child_pages, :class_name => "Page", :foreign_key => "parent_page_id", :order => 'tree_order'
 
   belongs_to :page_layout
+  has_friendly_id :tag
 
   liquid_methods :name, :url, :tag, :parent_page, :metakeywords, :metadescription, :id, :placements
 
@@ -28,4 +29,5 @@ class Page < ScamperBase
   def landing_page?
     Site.find_by_landing_page_id id
   end
+
 end
