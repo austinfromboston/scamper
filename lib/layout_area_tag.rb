@@ -12,12 +12,14 @@ class LayoutAreaTag < Liquid::Tag
 
     placements = context.scopes.last['page'].placements.ordered.find_all_by_block block_name
     placements.inject("") do |text, pl|
-      if pl.child_page
-        layout_area_layout = Liquid::Template.parse( pl.child_page.page_layout.html )
-        text << layout_area_layout.render!( { 'page' => pl.child_page, 'current_page' => context.scopes.last['page'] }, { :registers => context.registers } )
-      elsif pl.article
-        view_type = pl.view_type || 'default'
-        text << render_erb( context, "articles/#{view_type}", { :article => pl.article, :current_page => context.scopes.last['current_page'] } )
+      if pl.child_item
+        if pl.child_item.is_a? Page
+          layout_area_layout = Liquid::Template.parse( pl.child_item.page_layout.html )
+          text << layout_area_layout.render!( { 'page' => pl.child_item, 'current_page' => context.scopes.last['page'] }, { :registers => context.registers } )
+        elsif pl.child_item.is_a? Article
+          view_type = pl.view_type || 'default'
+          text << render_erb( context, "articles/#{view_type}", { :article => pl.child_item, :current_page => context.scopes.last['current_page'] } )
+        end
       end
       text
     end

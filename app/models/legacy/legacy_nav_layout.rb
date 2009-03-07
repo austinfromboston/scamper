@@ -41,7 +41,7 @@ class LegacyNavLayout < LegacyData
       return unless page
       page.descendents.each do |p| 
         unless p.placements.find_by_view_type "#{nav_side}_nav"
-          p.placements.create :child_page_id => imported.id, :block => nav_side, :view_type => "#{nav_side}_nav"
+          p.placements.create :child_item_id => imported.id, :child_item_type => 'Page', :block => nav_side, :view_type => "#{nav_side}_nav"
         end
       end
     end
@@ -49,20 +49,20 @@ class LegacyNavLayout < LegacyData
     if class_id and !class_id.zero?
       page = Page.find_by_legacy_id_and_legacy_type(section_id, "class")
       return unless page
-      page.placements.create :child_page_id => imported.id, :block => nav_side, :view_type => "#{nav_side}_nav"
+      page.placements.create :child_item_type => 'Page', :child_item_id => imported.id, :block => nav_side, :view_type => "#{nav_side}_nav"
     end
 
     if introtext_id  == AMP_INTROTEXTS['content']
       log "Creating default navs for all pages"
       Page.all(:conditions => ["legacy_type not like ?", "%nav_layout%" ] ).each do |page|
         next if page.placements.find_by_block nav_side
-        page.placements.create :child_page_id => imported.id, :block => nav_side, :view_type => "#{nav_side}_nav"
+        page.placements.create :child_item_id => imported.id, :child_item_type => 'Page', :block => nav_side, :view_type => "#{nav_side}_nav"
       end
     end
 
     if introtext_id  == AMP_INTROTEXTS['frontpage']
       page = Site.first.landing_page
-      page.placements.create :child_page_id => imported.id, :block => nav_side, :view_type => "#{nav_side}_nav"
+      page.placements.create :child_item_id => imported.id, :child_item_type => 'Page', :block => nav_side, :view_type => "#{nav_side}_nav"
     end
 
     if introtext_id  == AMP_INTROTEXTS['articles']
@@ -70,7 +70,7 @@ class LegacyNavLayout < LegacyData
       pages = Page.all :conditions => [ "tag = ? and legacy_id = ?", nil, nil ]
       pages.each do |page|
         next if page.placements.count > 1 or page.primary_article.nil?
-        page.placements.create :child_page_id => imported.id, :block => nav_side, :view_type => "#{nav_side}_nav"
+        page.placements.create :child_item_id => imported.id, :child_item_type => 'Page', :block => nav_side, :view_type => "#{nav_side}_nav"
         
       end
     end

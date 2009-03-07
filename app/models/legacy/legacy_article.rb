@@ -139,8 +139,8 @@ class LegacyArticle < LegacyData
 
   def create_latest_placements
     return unless read_attribute( :new ) && !read_attribute( :new ).zero?
-    tag_page = Page.find_by_tag 'new'
-    tag_page ||= Page.create :tag => 'new', :name => 'New items'
+    tag_page = Page.find_by_tag 'new_items'
+    tag_page ||= Page.create :tag => 'new_items', :name => 'New items'
     imported.placements.create :page => tag_page
   end
 

@@ -1,11 +1,11 @@
 class Article < ScamperBase
   #establish_connection
-  has_many :placements
+  has_many :placements, :as => :child_item
   has_many :pages, :through => :placements
   has_one :primary_page, :through => :placements, :conditions => [ "canonical = ?", true ], :class_name => "Page", :source => :page
 
   named_scope :on_page, lambda { |page| 
-    { :conditions => [ "articles.id in (?)", Placement.find_all_by_page_id( page.id ).map(&:article_id) ] } 
+    { :conditions => [ "articles.id in (?)", Placement.articles.find_all_by_page_id( page.id ).map(&:child_item) ] } 
   }
   named_scope :public, :conditions => [ "articles.status = ?", 'live' ]
 

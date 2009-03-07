@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090303175653) do
+ActiveRecord::Schema.define(:version => 20090305185751) do
 
   create_table "articles", :force => true do |t|
     t.string   "title"
@@ -25,6 +25,24 @@ ActiveRecord::Schema.define(:version => 20090303175653) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "legacy_type",   :limit => 20
+  end
+
+  create_table "media", :force => true do |t|
+    t.string   "name"
+    t.string   "caption"
+    t.string   "alt"
+    t.date     "media_created_on"
+    t.string   "media_type"
+    t.integer  "width"
+    t.integer  "height"
+    t.string   "license"
+    t.string   "added_by"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.string   "image_file_size"
+    t.datetime "image_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "page_layouts", :force => true do |t|
@@ -53,15 +71,15 @@ ActiveRecord::Schema.define(:version => 20090303175653) do
   end
 
   create_table "placements", :force => true do |t|
-    t.integer  "article_id"
     t.integer  "page_id"
     t.integer  "list_order"
     t.string   "view_type"
     t.boolean  "canonical"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "child_page_id"
     t.string   "block"
+    t.string   "child_type"
+    t.integer  "child_id"
   end
 
   create_table "sites", :force => true do |t|

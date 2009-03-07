@@ -5,9 +5,10 @@ class LegacyRelatedSection < LegacyData
   import_to :placement
   IMPORT_KEYS = {
     :placement => {
-      :article_id => :confirm_article,
-      :page_id => :confirm_section,
-      :view_type => lambda { |rl| 
+      :child_item_type => 'Article',
+      :child_item_id   => :confirm_article,
+      :page_id    => :confirm_section,
+      :view_type  => lambda { |rl| 
           section = LegacySection.find (rl.typeid)
           'hidden' if section && section.usetype 
       }

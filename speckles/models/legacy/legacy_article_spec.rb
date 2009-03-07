@@ -78,6 +78,7 @@ describe LegacyArticle do
 
     describe "items marked as new" do
       before do
+        Page.destroy_all ["tag = ?", 'new' ]
         @latest_page = create_page :name => 'latest update', :tag => 'new'
         @article.write_attribute :new, true
       end
