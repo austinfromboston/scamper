@@ -134,14 +134,14 @@ class LegacyArticle < LegacyData
     
     # use a created page
     class_page ||= Page.create :tag => class_tag, :name => AMP_CLASSES_WHICH_AGGREGATE[amp_class].titleize
-    imported.placements.create :page => class_page
+    imported.placements.create :page => class_page, :view_type => 'list/default'
   end
 
   def create_latest_placements
     return unless read_attribute( :new ) && !read_attribute( :new ).zero?
     tag_page = Page.find_by_tag 'new_items'
     tag_page ||= Page.create :tag => 'new_items', :name => 'New items'
-    imported.placements.create :page => tag_page
+    imported.placements.create :page => tag_page, :view_type => 'list/default'
   end
 
   def create_tag_placements
@@ -152,7 +152,7 @@ class LegacyArticle < LegacyData
       simple_tag = simplify_tag( tag.name )
       tag_page = Page.find_by_tag( simple_tag )
       tag_page ||= Page.create :tag => simple_tag, :name => tag.name.titleize
-      imported.placements.create :page => tag_page
+      imported.placements.create :page => tag_page, :view_type => 'list/default'
     end
   end
 
