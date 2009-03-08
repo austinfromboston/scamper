@@ -17,4 +17,8 @@ class Article < ScamperBase
     return bh if bh && !bh.blank?
     body
   end
+
+  def primary_image
+    primary_page && primary_page.primary_media && primary_page.primary_media.image
+  end
 end

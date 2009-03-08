@@ -165,7 +165,7 @@ class LegacyArticle < LegacyData
       raise TrashedItemImport if section.parent == LegacySection::AMP_TRASH
       section_page = section.import  
     end
-    imported.placements.create :page => section_page, :list_order => pageorder, :view_type => ( 'hidden' if section.usetype )
+    imported.placements.create :page => section_page, :list_order => pageorder, :view_type => ( section.show_list? ? 'list/default' : 'hidden' )
   rescue ActiveRecord::RecordNotFound
     nil
 

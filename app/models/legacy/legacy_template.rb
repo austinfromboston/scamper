@@ -71,6 +71,7 @@ img.thumb {
     max-height: 300px;
 }</style>
 <script language="Javascript"  type="text/javascript" src="/legacy/scripts/functions.js"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/scamper.css">
 <link rel="stylesheet" type="text/css" href="/stylesheets/site.css">
 HEADER
 

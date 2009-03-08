@@ -1,0 +1,9 @@
+.list-item.article-default
+  - if article.primary_image
+    .list-thumbnail
+      = image_tag article.primary_image.url(:thumb) 
+  .list-description{ :class => (article.primary_image.present? ? 'list-description-with-thumbnail' : nil )}
+    %h4.list-title
+      = link_to article.title, page_path( article.primary_page )
+    %p
+      = article.blurb

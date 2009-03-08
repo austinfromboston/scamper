@@ -10,7 +10,11 @@ class LegacyRelatedSection < LegacyData
       :page_id    => :confirm_section,
       :view_type  => lambda { |rl| 
           section = LegacySection.find (rl.typeid)
-          'hidden' if section && section.usetype 
+          if section && !section.show_list?
+            'hidden' 
+          else
+            'list/default'
+          end
       }
     }
   }
