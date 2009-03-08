@@ -20,11 +20,17 @@ class LegacyTemplate < LegacyData
     import_header + import_body
   end
 
+  PHP_TOKEN_PATTERN = '<div class="import-token">PHP: %s</div>'
   def convert_tokens(source)
-    source.gsub(  /(\{\{|<\?php)([^\}>]+)(\}\}|\?>)/, '<div class="import-token">PHP: \2</div>' ).
+    source.gsub(  /(\{\{|<\?php)([^\}>]+)(\}\}|\?>)/, (PHP_TOKEN_PATTERN % '\2')).
       gsub(/\[-body-\]/, "{% layout_area %}" ).
       gsub(/\[-(left|right) nav-\]/, 
-           '<div class="nav_block" id="block_\1">{% layout_area \1%}</div>' )
+           ( nav_block_wrapper % [ '\1', '{% layout_area \1 %}' ] ))
+           #'<div class="nav_block" id="block_\1">{% layout_area \1 %}</div>' )
+  end
+
+  def nav_block_wrapper
+    '<div class="nav_block" id="block_%s">%s</div>'
   end
 
   def convert_urls(source)

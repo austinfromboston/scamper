@@ -5,6 +5,7 @@ class LegacyImage < LegacyData
   import_to :media
 
   AMP_FORM_DATE_DEFAULT = Date.new( 2000, 1, 1 )
+  ORIGINAL_PATH = "#{RAILS_ROOT}/public/legacy/img/original/"
 
 
   IMPORT_KEYS = {
@@ -21,7 +22,7 @@ class LegacyImage < LegacyData
   after_import :place_in_articles
 
   def original_image_file
-    File.open "#{RAILS_ROOT}/public/legacy/img/original/#{name}", 'r'
+    File.open(( ORIGINAL_PATH + name ), 'r')
   end
 
   def verified_date
@@ -29,7 +30,7 @@ class LegacyImage < LegacyData
   end
 
   def import
-    return unless File.exists? "#{RAILS_ROOT}/public/legacy/img/original/#{name}"
+    return unless File.exists?( ORIGINAL_PATH + name )
     existing_image = Media.find_by_legacy_id( id )
     if existing_image
       self.imported = existing_image

@@ -20,7 +20,7 @@ class LegacySection < LegacyData
       :created_at => :timestamp
     }
   }
-  #after_import :create_primary_placement
+  after_import :place_banner_image
 
   def set_defaults
     self.timestamp ||= Time.now
@@ -77,5 +77,34 @@ class LegacySection < LegacyData
     imported.delete if imported
     Page.delete_all [ "legacy_id = ? and legacy_type = ?", id, "section" ]
 
+  end
+
+  def inherited_flash
+    return flash if flash && !flash.blank?
+    return if parent.nil? or [ 0, AMP_ROOT, AMP_TRASH ].include?( parent )
+    parent_section = LegacySection.find parent
+    parent_section.inherited_flash if parent_section
+  end
+
+  def place_banner_image
+    banner_image = inherited_flash
+    return unless banner_image 
+    log "banner image #{banner_image} found for Section #{type}"
+    imported ||= Page.find_by_legacy_id_and_legacy_type id, 'section'
+    image = Media.find_by_image_file_name( banner_image )
+    if image.nil?
+      legacy_image = LegacyImage.find_by_name banner_image
+      if legacy_image
+        image = legacy_image.import 
+      else
+        return unless File.exists?( LegacyImage::ORIGINAL_PATH + banner_image )
+        File.open( (LegacyImage::ORIGINAL_PATH + banner_image ), 'r' ) do |f|
+          image = Media.create :image => f
+        end
+      end
+    end
+
+    log "placing banner image #{banner_image} on page #{imported.to_param}"
+    image.placements.create :page => imported, :block => 'banner', :view_type => 'raw_original'
   end
 end

@@ -1,5 +1,21 @@
-#require 'legacy/site'
 class LegacyImporter
+  def self.run
+    if File.exist?( File.join( RAILS_ROOT, 'config', 'legacy', 'init.rb' ))
+      load File.join( RAILS_ROOT, 'config', 'legacy', 'init.rb' )
+    end
+    importer = LegacyImporter.new
+    importer.do_site
+    importer.do_templates
+    importer.do_section_headers
+    importer.do_all_articles
+    importer.do_related_sections
+
+    importer.do_template_inheritance
+    importer.do_navs
+
+    importer.do_images
+  end
+
   def do_site
     @site = LegacySite.find 1
     @site.import
@@ -99,19 +115,77 @@ class LegacyImporter
     LegacyImage.all.each { |li| li.import }
   end
 
-  def self.run
-    importer = LegacyImporter.new
-    importer.do_site
-    importer.do_templates
-    importer.do_section_headers
-    importer.do_all_articles
-    importer.do_related_sections
 
-    importer.do_template_inheritance
-    importer.do_navs
+  class Configuration
+    class Template
+      def replace(attr, item_to_match, replace_action)
+        LegacyTemplate.after_import do
+          initial_value = imported.send(attr)
+          updated_value = replace_action
+          if replace_action.is_a? Proc
+            updated_value = cblock.call(initial_value)
+          end
+          imported.update_attribute attr, initial_value.gsub( item_to_match, updated_value )
+        end
+      end
 
-    importer.do_images
+      def ignore(attr, item_to_match)
+        replace attr, item_to_match, ''
+      end
 
+      def php_include( filename )
+        Regexp.new( LegacyTemplate::PHP_TOKEN_PATTERN % ('[^<>]*' + filename + '[^<>]*' ))
+      end
+      def custom_block( block_name )
+        "{% custom_block #{block_name} %}"
+      end
+      def layout_area( block_name )
+        "{% layout_area #{block_name} %}"
+      end
+    end
+    def templates(&block)
+      t = Template.new
+      t.instance_eval(&block)
+    end
 
+    def navs(&block)
+      t = Nav.new
+      t.instance_eval(&block)
+    end
+
+    def nav_layouts(&block)
+      t = NavLayout.new
+      t.instance_eval(&block)
+    end
+
+    class NavLayout
+      def after_import( options, &block )
+        LegacyNavLayout.after_import do
+          action_allowed = true
+          if options[:if] 
+            action_allowed = options[:if].call(self)
+          end
+          instance_eval(&block) if action_allowed
+        end
+      end
+    end
+
+    class Nav
+      def add_attributes( new_attrs, options = {} )
+        LegacyNav.before_import do
+          action_allowed = true
+          if options[:if] 
+            action_allowed = options[:if].call(self)
+          end
+          self.attributes = new_attrs if action_allowed 
+        end
+      end
+    end
+
+  end
+
+  def self.configure(&block)
+    config = Configuration.new 
+    yield config
   end
 end
