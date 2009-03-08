@@ -1,0 +1,9 @@
+%h1 New Media
+
+= error_messages_for :media 
+
+- form_for @media, :url => media_index_path, :html => {:multipart => true} do |f| 
+  = render(:partial => 'form', :locals => {:f => f})
+  %p
+    = f.submit "Create"
+

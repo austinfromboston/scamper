@@ -1,0 +1,20 @@
+%p
+  %b Caption:
+  =h @media.caption 
+
+%p
+  %b Alt:
+  =h @media.alt 
+
+%p
+  %b Media created on:
+  =h @media.media_created_on 
+
+%p
+  %b License:
+  =h @media.license 
+
+%img{:src => @media.image.url(:medium)}
+
+
+= link_to 'Edit', edit_media_path(@media)

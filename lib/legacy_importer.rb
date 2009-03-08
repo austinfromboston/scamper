@@ -95,6 +95,10 @@ class LegacyImporter
     do_nav_elements
   end
 
+  def do_images
+    LegacyImage.all.each { |li| li.import }
+  end
+
   def self.run
     importer = LegacyImporter.new
     importer.do_site

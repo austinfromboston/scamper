@@ -1,0 +1,8 @@
+%h1 Listing Media
+
+%ul.media
+  - for media in @media
+    %li.plain
+      = render :partial => "media", :object => media
+    
+= link_to 'New media', new_media_path 

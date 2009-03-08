@@ -1,17 +1,18 @@
-%h2.title
-  =h article.title 
+.default-article
+  %h2.title
+    =h article.title 
 
-%h3.subtitle
-  =h article.subtitle 
+  %h3.subtitle
+    =h article.subtitle 
 
-= article.body_html
+  = article.body_html
 
-%p
-  %b Status:
-  =h article.status 
+  %p
+    %b Status:
+    =h article.status 
 
-%p
-  %b Published at:
-  =h article.published_at 
+  %p
+    %b Published at:
+    =h article.published_at 
 
 

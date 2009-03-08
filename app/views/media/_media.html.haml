@@ -1,0 +1,12 @@
+- div_for media do
+  .image-block-thumb
+    %a{:href => edit_media_path(media) }
+      = image_tag media.image.url(:thumb), :alt => media.alt_text
+    %p.caption
+      = media.caption
+    %p
+      = media.media_created_on
+      %br
+      = media.image_file_name
+      %br
+      = media.license

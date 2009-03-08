@@ -1,0 +1,10 @@
+%h1 Editing Media
+
+= error_messages_for :media 
+
+- form_for @media, :html => {:multipart => true } do |f|
+  = image_tag @media.image.url(:thumb)
+  = render(:partial => 'form', :locals => {:f => f})
+  %p= f.submit "Update"
+
+
