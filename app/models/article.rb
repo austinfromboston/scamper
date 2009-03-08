@@ -6,7 +6,7 @@ class Article < ScamperBase
   has_one :primary_placement, :conditions => [ "canonical = ?", true ], :class_name => "Placement", :as => :child_item
 
   named_scope :on_page, lambda { |page| 
-    { :conditions => [ "articles.id in (?)", Placement.articles.find_all_by_page_id( page.id ).map(&:child_item) ] } 
+    { :conditions => [ "articles.id in (?)", page.article_ids ] }
   }
   named_scope :public, :conditions => [ "articles.status = ?", 'live' ]
 
@@ -20,5 +20,10 @@ class Article < ScamperBase
 
   def primary_image
     primary_page && primary_page.primary_media && primary_page.primary_media.image
+  end
+
+  # means that the article lives only on a single page in addition to its canonical page
+  def single_placement?
+    primary_placement && placements.size < 3
   end
 end
