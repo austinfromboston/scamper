@@ -110,6 +110,8 @@ class LegacyImporter
     importer.do_template_inheritance
     importer.do_navs
 
+    importer.do_images
+
 
   end
 end

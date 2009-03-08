@@ -1,0 +1,9 @@
+.default-image-block
+  = image_tag media.image.url(:medium)
+  .caption-block
+    = media.caption
+  .metadata
+    %p.creation_date
+      = media.media_created_on
+    %p.license
+      = media.license

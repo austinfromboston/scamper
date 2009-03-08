@@ -19,6 +19,9 @@ class LayoutAreaTag < Liquid::Tag
         elsif pl.child_item.is_a? Article
           view_type = pl.view_type || 'default'
           text << render_erb( context, "articles/#{view_type}", { :article => pl.child_item, :current_page => context.scopes.last['current_page'] } )
+        elsif pl.child_item.is_a? Media
+          view_type = pl.view_type || 'default'
+          text << render_erb( context, "media/#{view_type}", { :media => pl.child_item, :current_page => context.scopes.last['current_page'] } )
         end
       end
       text
