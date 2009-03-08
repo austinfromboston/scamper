@@ -1,8 +1,9 @@
-%h1 Listing Media
+%h1 
+  Listing Media
+  = link_to 'add', new_media_path, :class => 'add button'
 
-%ul.media
+%ul.media.plain
   - for media in @media
-    %li.plain
+    %li
       = render :partial => "media", :object => media
     
-= link_to 'New media', new_media_path 
