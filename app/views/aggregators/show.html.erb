@@ -1,0 +1,18 @@
+<p>
+  <b>Name:</b>
+  <%=h @aggregator.name %>
+</p>
+
+<p>
+  <b>Logic:</b>
+  <%=h @aggregator.logic %>
+</p>
+
+<p>
+  <b>Page:</b>
+  <%=h @aggregator.page_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_aggregator_path(@aggregator) %> |
+<%= link_to 'Back', aggregators_path %>

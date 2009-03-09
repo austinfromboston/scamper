@@ -1,0 +1,2 @@
+module AggregatorsHelper
+end

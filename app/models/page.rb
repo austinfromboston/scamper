@@ -14,6 +14,10 @@ class Page < ScamperBase
   belongs_to :page_layout
   has_friendly_id :tag
 
+  has_many :aggregation_sources
+  has_many :listening_aggregators, :through => :aggregation_sources, :source => :aggregator
+  has_one :aggregator
+
   liquid_methods :name, :url, :tag, :parent_page, :metakeywords, :metadescription, :id, :placements
 
   def descendents

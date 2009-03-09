@@ -1,0 +1,24 @@
+<h1>Listing aggregators</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Logic</th>
+    <th>Page</th>
+  </tr>
+
+<% for aggregator in @aggregators %>
+  <tr>
+    <td><%=h aggregator.name %></td>
+    <td><%=h aggregator.logic %></td>
+    <td><%=h aggregator.page_id %></td>
+    <td><%= link_to 'Show', aggregator %></td>
+    <td><%= link_to 'Edit', edit_aggregator_path(aggregator) %></td>
+    <td><%= link_to 'Destroy', aggregator, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New aggregator', new_aggregator_path %>
