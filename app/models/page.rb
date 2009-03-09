@@ -16,7 +16,7 @@ class Page < ScamperBase
 
   has_many :aggregation_sources
   has_many :listening_aggregators, :through => :aggregation_sources, :source => :aggregator
-  has_one :aggregator
+  has_many :aggregators
 
   liquid_methods :name, :url, :tag, :parent_page, :metakeywords, :metadescription, :id, :placements
 

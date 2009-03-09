@@ -25,7 +25,11 @@ class LegacyNav < LegacyData
       layout_page = Page.find_by_legacy_id_and_legacy_type loc.layout_id, loc_nav_side
       next unless layout_page
 
-      layout_page.placements.create( {:child_item_id => imported.id, :list_order => loc.position[ /(\d+)/, 1 ], :view_type => 'nav', :child_item_type => 'Article' }.merge( placement_attrs || {} ))
+      layout_page.placements.create( {:child_item_id  => imported.id, 
+                                      :list_order     => loc.position[ /(\d+)/, 1 ], 
+                                      :assigned_order => loc.position[ /(\d+)/, 1 ], 
+                                      :view_type      => 'nav', 
+                                      :child_item_type => 'Article' }.merge( placement_attrs || {} ))
     end
   end
 

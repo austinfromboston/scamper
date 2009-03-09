@@ -37,15 +37,15 @@ class LegacyArticle < LegacyData
 
   IMPORT_KEYS = {
     :article => {
-      :legacy_id => :id,
+      :legacy_id  => :id,
       :legacy_type => 'article',
-      :title => :title,
-      :subtitle => :subtitile,
-      :body_html => :body_as_html,
-      :body => :test,
-      :blurb => :shortdesc,
+      :title      => :title,
+      :subtitle   => :subtitile,
+      :body_html  => :body_as_html,
+      :body       => :test,
+      :blurb      => :shortdesc,
       :published_at => :clean_date,
-      :status => :publishing_status,
+      :status     => :publishing_status,
       :created_at => :datecreated,
       :updated_at => :updated
       #:created_by_id => { confirm_user( enteredby ) },
@@ -53,12 +53,12 @@ class LegacyArticle < LegacyData
       #:author_id => :confirm_author,
     },
     :page => {
-      :name => :title,
-      :redirect_to => :link,
-      :metakeywords => :metakeywords,
-      :metadescription => :metadescription,
-      :created_at => :datecreated,
-      :updated_at => :updated,
+      :name             => :title,
+      :redirect_to      => :link,
+      :metakeywords     => :metakeywords,
+      :metadescription  => :metadescription,
+      :created_at       => :datecreated,
+      :updated_at       => :updated,
       #:url  => :permalink,
       #:parent_page_id => :confirm_parent_page,
       #:placements => :create_primary_placement
@@ -133,7 +133,7 @@ class LegacyArticle < LegacyData
     class_page ||= old_class.import if old_class
     
     # use a created page
-    class_page ||= Page.create :tag => class_tag, :name => AMP_CLASSES_WHICH_AGGREGATE[amp_class].titleize
+    class_page ||= Page.create :tag => class_tag, :name => AMP_CLASSES_WHICH_AGGREGATE[amp_class].titleize, :legacy_id => amp_class, :legacy_type => 'class'
     imported.placements.create :page => class_page, :view_type => 'list/default'
   end
 
@@ -151,7 +151,7 @@ class LegacyArticle < LegacyData
     tags.each do |tag|
       simple_tag = simplify_tag( tag.name )
       tag_page = Page.find_by_tag( simple_tag )
-      tag_page ||= Page.create :tag => simple_tag, :name => tag.name.titleize
+      tag_page ||= Page.create :tag => simple_tag, :name => tag.name.titleize, :legacy_id => tag.id, :legacy_type => 'tag'
       imported.placements.create :page => tag_page, :view_type => 'list/default'
     end
   end
@@ -165,7 +165,7 @@ class LegacyArticle < LegacyData
       raise TrashedItemImport if section.parent == LegacySection::AMP_TRASH
       section_page = section.import  
     end
-    imported.placements.create :page => section_page, :list_order => pageorder, :view_type => ( section.show_list? ? 'list/default' : 'hidden' )
+    imported.placements.create :page => section_page, :list_order => pageorder, :assigned_order => pageorder, :view_type => ( section.show_list? ? 'list/default' : 'hidden' )
   rescue ActiveRecord::RecordNotFound
     nil
 
