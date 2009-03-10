@@ -60,6 +60,7 @@ class LegacyTemplate < LegacyData
   end
 
   LEGACY_HEADER = <<-HEADER
+<title>{{ site.name }} &mdash; {{current_page.name }}</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" type="text/css" href="/legacy/styles_default.css" id="default">
 

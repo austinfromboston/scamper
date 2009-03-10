@@ -30,11 +30,15 @@ class PagesController < ApplicationController
     Liquid::Template.register_tag('custom_block', CustomBlockTag)
     Liquid::Template.register_tag('place', PlaceTag)
     xtemplate = Liquid::Template.parse( @page.page_layout.html )
-    page_html = xtemplate.render!( { 'page' => @page, 'current_page' => @page } , :registers => { :controller => self } ) 
+    page_html = xtemplate.render!( { 'page' => @page, 'current_page' => @page , 'site' => current_site } , :registers => { :controller => self } ) 
     render :text => page_html
 
       #{ 'blocks' => 
       #{ 'body'  => @page.primary_article.body_html }.merge( rendered_blocks ) }, 
       #  :filters => [ApplicationHelper] )
+  end
+
+  def current_site
+    Site.first
   end
 end
