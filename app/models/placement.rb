@@ -45,24 +45,28 @@ class Placement < ScamperBase
     page.listening_aggregators.each { |agg| agg.update_page } if page
   end
 
-  def next_newest_item
-      page.placements.content.visible.first :joins => "left join articles on articles.id = placements.child_item_id and placements.child_item_type = 'Article'", :conditions => [ "articles.published_at is not ? and articles.published_at < ? and placements.assigned_order is ?", nil, child_item.published_at, nil ], :order => 'articles.published_at DESC'
+  def item_to_displace
+
 =begin
+    page.placements.content.visible.first :joins => "left join articles on articles.id = placements.child_item_id and placements.child_item_type = 'Article'", :conditions => [ "articles.published_at is not ? and articles.published_at < ? and placements.assigned_order is ?", nil, child_item.published_at, nil ], :order => 'articles.published_at DESC'
+=end
       page.placements.content.visible.select do |pl|
         pl.child_item.is_a?(Article) and pl.child_item.published_at < child_item.published_at and pl.assigned_order.nil?
       end.max do |pl1, pl2| 
         pl1.child_item.published_at <=> pl2.child_item.published_at 
       end
-=end
   end
+
   def discover_list_placement
+    return if view_type == 'hidden' && assigned_order.nil?
+    my_new_position ||= assigned_order
+    my_new_position ||= 1 if view_type == 'header'
 
-    if assigned_order.nil? and child_item.is_a?(Article) and child_item.published_at.present?
+    if my_new_position.nil? and child_item.is_a?(Article) and child_item.published_at.present?
 
-      my_new_position = next_newest_item.list_order if next_newest_item
+      my_new_position = item_to_displace.list_order if item_to_displace 
     end
 
-    my_new_position ||= assigned_order
     if my_new_position
       increment_positions_on_lower_items( my_new_position )
       self.list_order = my_new_position

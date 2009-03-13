@@ -39,5 +39,15 @@ class Page < ScamperBase
     ( tag and !tag.blank? and tag ) or id.to_s
   end
 
+  def sort_on
+    :published_at
+  end
+
+=begin
+  def sort_placements(layout_area = nil)
+    placements.first.discover_list_placement
+  end
+=end
+
 
 end
