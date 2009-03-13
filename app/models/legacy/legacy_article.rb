@@ -42,7 +42,7 @@ class LegacyArticle < LegacyData
       :title      => :title,
       :subtitle   => :subtitile,
       :body_html  => :body_as_html,
-      :body       => :test,
+      :body       => :article_text,
       :blurb      => :shortdesc,
       :published_at => :clean_date,
       :status     => :publishing_status,
@@ -80,8 +80,12 @@ class LegacyArticle < LegacyData
 #    :place_images
 
   def body_as_html
-    return test if html?
-    simple_format test
+    return article_text if html?
+    simple_format article_text
+  end
+
+  def article_text
+    read_attribute :test
   end
 
   # this should take account of the various null-equivalents in AMP
