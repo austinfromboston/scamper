@@ -3,7 +3,7 @@
 = error_messages_for :page 
 
 - form_for(@page) do |f| 
-  = render(:partial => 'form', :locals => {:f => f})
+  = render(:partial => 'form', :locals => {:f => f, :page => @page})
   %p
     = f.submit "Create"
 

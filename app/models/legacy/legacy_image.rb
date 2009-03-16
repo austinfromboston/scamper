@@ -44,8 +44,8 @@ class LegacyImage < LegacyData
     arts.each do |legacy_art|
       art = Article.find_by_legacy_id_and_legacy_type(legacy_art.id, 'article' )
       next unless art && art.primary_page
-      art.primary_page.placements.create :child_item => imported, :list_order => 1, :canonical => true
-      art.primary_placement.update_attribute :list_order, 2
+      art.primary_page.placements.create :child_item => imported, :list_order => 1, :canonical => true, :assigned_order => 1
+      art.primary_placement.update_attributes :list_order => 2, :assigned_order => 2
       sync_legacy_article_info( legacy_art, imported )
       log "placed #{imported.image.original_filename} on #{art.primary_page.name}"
     end

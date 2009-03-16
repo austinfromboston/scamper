@@ -1,0 +1,29 @@
+#menu
+  .padding
+
+    %ul#breadcrumb.span-15.plain
+      %li.ui-state-default.ui-corner-all.hoverable
+        = link_to "Site: #{Site.first.name}", edit_site_path(Site.first)
+      - if @page && @page.new_record?
+        %li
+          New Page
+      - elsif @page
+        - @page.ancestors.reverse.each do |parent_page|
+          %li.ui-state-default.ui-corner-all.hoverable
+            = link_to parent_page.name, edit_page_path( parent_page )
+        %li.ui-state-active.ui-corner-all
+          = @page.name
+
+    #global-search.span-5
+      -form_tag "/searches" do |f|
+        = text_field_tag :q, "Search #{controller.current_site.name}"
+    #buttons.span-3
+      -#.ui-state-default.ui-corner-all
+      %a{:href => new_page_path, :title => 'new page', :class => 'ui-state-default ui-corner-all hoverable' }
+        .sizing-block
+          .icon-padding
+          .clear
+          .ui-icon.ui-icon-plusthick
+        New Page
+
+.clear

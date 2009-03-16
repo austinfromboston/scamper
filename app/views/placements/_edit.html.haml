@@ -1,0 +1,5 @@
+- if placement.child_item.is_a? Article
+  - form_for placement.child_item do |f|
+    = render :partial => 'articles/list/admin', :locals => { :f => f, :article => placement.child_item }
+- elsif placement.child_item
+  = placement.child_item.name

@@ -1,11 +1,39 @@
-%h1 Editing Page
+- content_for :header do
+  - div_for @page, :class => 'header_form' do
+    .thumbnail.span-4
+      #thumbnail-display
+        .img-wrapper
+          - thumbnail_url =  @page.primary_media.image.url(:thumb) if @page.primary_media
+          - thumbnail_url ||= placeholder_images[:thumb]
+          = image_tag thumbnail_url, :id => 'page-thumbnail'
+      = render :partial => 'media/selector', :locals => { :display => '#page-thumbnail' }
 
-= error_messages_for :page 
+    - form_for @page do |f|
+      = render :partial => 'form', :locals => { :f => f, :page => @page }
+      .form-item.js-hide
+        = f.submit 'Update Page'
 
-- form_for(@page) do |f|
-  = render(:partial => 'form', :locals => {:f => f})
-  %p= f.submit "Update"
+    .clear
 
-= link_to 'Show', page_path(@page)
-= link_to 'Back', pages_path
+- content_for :sidebar do
+  %ul.plain
+    - toolbar_blocks.each do |tblock|
+      %li.toolbox-item.drag-to-layout.span-4{ :'data-template' => tblock[:template] }
+        .ui-state-default.ui-corner-all
+          -#%span.ui-icon.ui-icon-arrowthick-1-sw
+          .right-corner.ui-icon.ui-icon-grip-diagonal-ne
+          .padding-small
+            = tblock[:label]
 
+
+
+#layout-container
+  %ul#layout-1.layout.span-11.plain
+    - @page.placements.content.ordered.each do |placement|
+      %li.list-item
+        = render :partial => 'placements/edit', :locals => { :placement => placement }
+  %ul#layout-2.layout.span-6.plain
+
+- content_for :dom_ready do
+  $('.submit').livequery( function() { $(this).hide() } );
+  $('.thumbnail').click( function() { $('.image-selector').toggle(); return false; } );

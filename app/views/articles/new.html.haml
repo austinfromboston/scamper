@@ -1,10 +1,4 @@
-%h1 New Article
-
-= error_messages_for :article 
-
-- form_for(@article) do |f| 
-  = render(:partial => 'form', :locals => {:f => f})
-  %p
-    = f.submit "Create"
-
-= link_to 'Back', articles_path 
+- form_for @article do |f|
+  = render :partial => 'articles/form', :locals => { :f => f }
+  %p.form_item.submit
+    = f.submit "Create Article"
