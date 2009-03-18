@@ -1,0 +1,67 @@
+%ul.plain#toolbar
+
+  %li.toolbox-item.drag-to-layout.span-4
+    .new_article_button.ui-state-default.ui-corner-all
+      .right-corner.ui-icon.ui-icon-grip-diagonal-ne
+      .padding-small
+        New Text
+    #find_article.find-item-widget.js-staging.span-14
+      .ui-state-default.ui-corner-all
+        .padding-small
+          - form_tag articles_path, :id => 'article-search-form', :method => :get do
+            = text_field_tag :q, 'Search Articles', :class => 'span-7 search-field', :'data-default' => 'Search Articles', :id => 'append-article-search'
+          #remote-found-articles.remote-data
+      
+  %li.toolbox-item.drag-to-layout.span-4
+    .new_page_button.ui-state-default.ui-corner-all
+      .right-corner.ui-icon.ui-icon-grip-diagonal-ne
+      .padding-small
+        New List
+    #find_page.find-item-widget.js-staging.span-14
+      .ui-state-default.ui-corner-all
+        .padding-small
+          - form_tag pages_path, :id => 'page-search-form', :method => :get do
+            = text_field_tag :q, 'Search Lists', :class => 'span-7 search-field inline', :'data-default' => 'Search Lists'
+          .segment-toolbar
+            .busy-pages-button.button.ui-state-default.hoverable
+              .button.ui-icon.ui-icon-flag
+              .button
+                Busy Pages
+            .recent-pages-button.button.ui-state-default.hoverable
+              .button.ui-icon.ui-icon-cart{:title => 'Recent Pages'}
+              .button
+                Recent Pages
+          #remote-found-pages.remote-data
+
+  - toolbar_blocks.each do |tblock|
+    %li.toolbox-item.drag-to-layout.span-4{ :'data-template' => tblock[:template] }
+      .ui-state-default.ui-corner-all
+        -#%span.ui-icon.ui-icon-arrowthick-1-sw
+        .right-corner.ui-icon.ui-icon-grip-diagonal-ne
+        .padding-small
+          = tblock[:label]
+
+- content_for :dom_ready do
+  :plain
+    $('.new_article_button').click( function() {
+      $('#find_article').toggle();
+    } );
+    $('.new_page_button').click( function() {
+      $('#find_page').toggle();
+    } );
+    $('#article-search-form').ajaxForm( function( data, response_code, trigger ) {
+      $('#remote-found-articles').append( data );
+    } );
+    $('#page-search-form').ajaxForm( function( data, response_code, trigger ) {
+      $('#remote-found-pages').append( data );
+    } );
+    $('.search-field').focus( function() {
+      if ( $(this).val() == $(this).attr('data-default')) {
+        $(this).val('');
+      }
+    } );
+    $('.search-field').blur( function() {
+      if ( $(this).val() == '' ) {
+        $(this).val( $(this).attr('data-default') );
+      }
+    } );

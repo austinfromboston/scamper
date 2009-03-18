@@ -1,8 +1,5 @@
-%h1 Listing Pages
-
-%ul.pages
-  - for page in @pages
-    %li{:class => cycle("odd", "even") + ' ' + 'page'}
-      = render :partial => "page", :collection => @pages
-    
-= link_to 'New page', new_page_path 
+- @pages.each do |page|
+  = render :partial => 'placements/edit', :locals => {:placement => Placement.new( :child_item => page ) }
+- if @pages.empty?
+  No matches
+  .search-complete

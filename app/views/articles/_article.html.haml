@@ -1,2 +1,2 @@
 - div_for article do
-  = render :partial => 'default', :object => article, :as => :article
+  = render :partial => 'default', :locals => { :article => article }

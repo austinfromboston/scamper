@@ -105,7 +105,7 @@ class LegacySection < LegacyData
     end
 
     log "placing banner image #{banner_image} on page #{imported.to_param}"
-    image.placements.create :page => imported, :block => 'banner', :view_type => 'raw_original'
+    image.placements.create :page => imported, :layout_area => 'banner', :view_type => 'raw_original'
   end
 
   def show_list?

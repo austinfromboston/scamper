@@ -14,26 +14,81 @@
         = f.submit 'Update Page'
 
     .clear
-
-- content_for :sidebar do
-  %ul.plain
-    - toolbar_blocks.each do |tblock|
-      %li.toolbox-item.drag-to-layout.span-4{ :'data-template' => tblock[:template] }
-        .ui-state-default.ui-corner-all
-          -#%span.ui-icon.ui-icon-arrowthick-1-sw
-          .right-corner.ui-icon.ui-icon-grip-diagonal-ne
-          .padding-small
-            = tblock[:label]
+    = render :partial => 'pages/edit_toolbar'
 
 
 
-#layout-container
-  %ul#layout-1.layout.span-11.plain
-    - @page.placements.content.ordered.each do |placement|
-      %li.list-item
-        = render :partial => 'placements/edit', :locals => { :placement => placement }
-  %ul#layout-2.layout.span-6.plain
+#layout-container.layout-table
+  .layout-row
+    %ul#layout-banner.layout.plain
+      - @page.placements.scoped_by_layout_area('banner').ordered.each do |placement|
+        %li.list-item
+          = render :partial => 'placements/edit', :locals => { :placement => placement }
+  .layout-table
+    .layout-row
+      %ul#layout-left.layout.plain
+        - @page.placements.scoped_by_layout_area('left').ordered.each do |placement|
+          %li.list-item
+            = render :partial => 'placements/edit', :locals => { :placement => placement }
+      %ul#layout-center.layout.plain
+        - @page.placements.scoped_by_layout_area(nil).ordered.each do |placement|
+          %li.list-item
+            = render :partial => 'placements/edit', :locals => { :placement => placement }
+      %ul#layout-right.layout.plain
+        - @page.placements.scoped_by_layout_area('right').ordered.each do |placement|
+          %li.list-item
+            = render :partial => 'placements/edit', :locals => { :placement => placement }
 
 - content_for :dom_ready do
-  $('.submit').livequery( function() { $(this).hide() } );
-  $('.thumbnail').click( function() { $('.image-selector').toggle(); return false; } );
+  :plain
+    //hide form submits
+    $('.submit').livequery( function() { $(this).hide() } );
+    //show/hide image selector
+    $('.thumbnail').click( function() { $('.image-selector').toggle(); return false; } );
+    //sticky indicator for list contents
+    $('.sticky-indicator').live('click', function() {
+      $(this).parents('.layout').find('.article-admin.ui-state-active').removeClass('ui-state-active');
+      $(this).parents('.article-admin').addClass('ui-state-active');
+      $('.sticky-status', this ).toggle();
+      $(this).toggleClass('ui-state-active');
+      return false;
+    } );
+    //reveal article editor
+    $('.article-admin .list-title').live('click', function() {
+      $(this).parents('.layout').find('.article-admin.ui-state-active').removeClass('ui-state-active');
+      var block = $(this).parents('.article-admin');
+      block.addClass('ui-state-active');
+      block.find('.edit-article').toggle(); 
+      if( $('.edit-article .wysiwyg', block).length == 0 ) {
+        block.find('.edit-article .wysible').wysiwyg(); 
+      }
+      return false;
+    });
+    //lightbox article editor
+    $('.edit-article .fullscreen-toggle').live('click', function() {
+      var edit_area = $(this).parents('.edit-article');
+      $(this).mouseout();
+      if ( $(edit_area).parents('.ui-widget').length == 0 ) {
+        $('#outer-container').prepend(edit_area);
+        //$('body').prepend('<div class="ui-overlay"><div class="ui-widget-overlay"></div></div>').find('.ui-widget-overlay').css( { top: $(window).scrollTop() + 'px' } );
+
+        $('#outer-container').prepend('<div class="ui-overlay"><div class="ui-widget-overlay"></div><div class="ui-widget-shadow ui-corner-all"></div></div>').find('.ui-widget-shadow').css( { height: '672px', width: '622px', position: 'absolute', top: 30 + $(window).scrollTop() + 'px', left: $('#outer-container').position().left + 200 + 'px' } ).end().find('.ui-widget-overlay').css( { top: $(window).scrollTop() + 'px' } );
+        edit_area.wrap('<div class="ui-widget ui-widget-content ui-corner-all"><div class="ui-dialog-content ui-widget-content"></div></div>').parents('.ui-widget').css( { height: '650px', width: '600px', padding: '10px', position: 'absolute', top: 30 + $(window).scrollTop() + 'px', left: $('#outer-container').position().left + 200 + 'px' } );
+        edit_area.find('.wysiwyg').remove().end().find('.wysible').removeClass('span-11').addClass('span-16').wysiwyg();
+        $('.js-staging', edit_area).show();
+        $('body').css({ overflow: 'hidden' } );
+      } else {
+        $('body').css( 'overflow', 'auto' );
+        $('.ui-overlay,.ui-widget').remove();
+        $('.js-staging', edit_area).hide();
+        $('#content .list-item').not(':has(.edit-article)').find('.sticky-indicator').before(edit_area);
+        edit_area.find('.wysiwyg').remove();
+        edit_area.find('.wysible').wysiwyg();
+      }
+    } );
+
+    //close article editor
+    $('.edit-article .cancel-toggle').live('click', function() {
+      $(this).parents('.edit-article').hide(); 
+      return false;
+    });

@@ -195,7 +195,7 @@ class LegacyArticle < LegacyData
       section_page = section.import #Page.create :tag => simplify_tag( section.type ), :name => title
       section_page.update_attributes :name => title
     end
-    imported.placements.create :page => section_page, :canonical => true, :view_type => "header"
+    imported.placements.create :page => section_page, :canonical => true, :view_type => "header", :assigned_order => 1
   rescue ActiveRecord::RecordNotFound
     nil
   end

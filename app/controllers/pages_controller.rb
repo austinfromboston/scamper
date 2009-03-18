@@ -1,8 +1,17 @@
 class PagesController < ApplicationController
+  layout nil, :only => :index
   layout "administration", :only => [ :edit, :new ]
 
   make_resourceful do
     actions :all
+  end
+
+  def current_objects
+    if params[:q]
+      Page.paginate :per_page => 20, :page => params[:page], :conditions => ["name like ? and placements_count > ?", "%#{params[:q]}%", 1  ]
+    else
+      Page.paginate :per_page => 20, :page => params[:page]
+    end
   end
 
   helper_method :render_to_string

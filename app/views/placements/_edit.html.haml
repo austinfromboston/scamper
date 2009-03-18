@@ -1,5 +1,12 @@
 - if placement.child_item.is_a? Article
-  - form_for placement.child_item do |f|
-    = render :partial => 'articles/list/admin', :locals => { :f => f, :article => placement.child_item }
-- elsif placement.child_item
-  = placement.child_item.name
+  = render :partial => 'articles/list/admin', :locals => { :article => placement.child_item, :placement => placement }
+- elsif placement.child_item.is_a? Media
+  = render :partial => 'media/list/admin', :locals => { :media => placement.child_item, :placement => placement }
+
+- elsif placement.child_item.is_a? Page
+  .page-block
+    = placement.child_item.name
+    %ul.page-contents.plain
+      - placement.child_item.placements.ordered.each do |child_placement|
+        %li.list-item
+          = render :partial => "placements/edit", :locals => { :placement => child_placement }

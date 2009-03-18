@@ -1,19 +1,19 @@
 %p.form_item.page-item
   = f.label :name, "Title"
-  = f.text_field :name, :class => 'name-field'
+  = f.text_field :name, :class => 'name-field long'
   %br
   %span.js-show
     = link_to page.tag, page_path(page), :id => 'tag-edit-toggle'
 .clear
 %p.form_item.js-hide#tag-edit
   = f.label :tag
-  = f.text_field :tag
+  = f.text_field :tag, :class => 'long'
 = link_to "edit details", "#page-details", :id => 'page-details-toggle'
 
 #page-details.js-hide
   %p.form_item
     = f.label :redirect_to, "Redirect Visitors to URL"
-    = f.text_field  :redirect_to
+    = f.text_field  :redirect_to, :class => 'long'
   %p.form_item.page-item
     = f.label :page_layout_id
     = f.select :page_layout_id, page_layout_options, :include_blank => 'default layout'

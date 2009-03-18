@@ -9,7 +9,7 @@ class Placement < ScamperBase
   named_scope :child_pages, :conditions => [ "child_item_type = ?", "Page" ]
   named_scope :images, :conditions => [ "child_item_type = ?", "Media" ]
 
-  named_scope :content, :conditions => [ "block is ? and ( view_type != ? or view_type is ? )", nil, "header", nil ]
+  named_scope :content, :conditions => [ "layout_area is ? and ( view_type != ? or view_type is ? )", nil, "header", nil ]
   named_scope :visible, :conditions => [ "( view_type != ? or view_type is ? )", "hidden", nil ]
 
   named_scope :on_pages, lambda { |pages| { :conditions => [ "page_id in (?)", pages ] } }
@@ -23,14 +23,21 @@ class Placement < ScamperBase
     end
   }
 
-  acts_as_list :column => "list_order", :scope => [ :page_id, :block ], :default_position => :discover_list_placement
+  acts_as_list :column => "list_order", :scope => [ :page_id, :layout_area ], :default_position => :discover_list_placement
 
-  liquid_methods :content, :view_type, :list_order, :block, :article, :child_item #, :article_id, :child_page_id
+  liquid_methods :content, :view_type, :list_order, :layout_area, :article, :child_item #, :article_id, :child_page_id
   after_save :notify_aggregators
 
   def content
     article || child_page
   end
+
+  after_create :update_page_placements_count
+  after_destroy :update_page_placements_count
+  def update_page_placements_count
+    page.update_attribute :placements_count, page.placements.content.count
+  end
+
 
   def self.items_on_all_pages(pages)
     pages.inject(nil) do |children, p|
@@ -74,6 +81,10 @@ class Placement < ScamperBase
       add_to_list_bottom
     end
 
+  end
+
+  def assigned?
+    assigned_order && !assigned_order.zero?
   end
 
 end

@@ -10,13 +10,14 @@
   = stylesheet_link_tag 'blueprint/ie'
   <![endif]-->
   = stylesheet_link_tag "jquery-ui-1.7.custom.css"
+  = stylesheet_link_tag "jquery.wysiwyg.css"
   = stylesheet_link_tag 'application'
   = stylesheet_link_tag 'forms'
   = stylesheet_link_tag 'ui'
   -#= stylesheet_link_tag "scamper-test-ui"
   = yield :stylesheets
 %body
-  #outer_container.span-24
+  #outer-container.span-30
     #header.container
       =render :partial=>'layouts/menu'
       .flash-notice
@@ -25,10 +26,11 @@
         = flash[:error]
       = yield :header
     #main.container
-      #sidebar.span-5
-        %ul#toolbox.span-4
-          .js-only
-          = yield :sidebar
+      #sidebar
+        = yield :sidebar
+        -#.span-5
+          %ul#toolbox.span-4
+            .js-only
 
       #content
         = yield
@@ -36,10 +38,10 @@
     #footer.container
 
   = javascript_include_tag 'jquery-1.3.2.min.js'
-  = javascript_include_tag 'plugins/jquery.fn.js'
+  = javascript_include_tag 'plugins/jquery.form.js'
   = javascript_include_tag 'plugins/jquery.livequery.js'
-  = javascript_include_tag 'plugins/jquery.metadata.js'
-  = javascript_include_tag 'plugins/jquery.endless-scroll.js'
+  -#= javascript_include_tag 'plugins/jquery.metadata.js'
+  = javascript_include_tag 'plugins/jquery.wysiwyg.js'
   = javascript_include_tag "jquery-ui/jquery-ui-1.7.custom.js"
   = javascript_include_tag "json2"
   = javascript_include_tag "utilities"
@@ -47,7 +49,7 @@
   -# javascript_include_tag "jquery-ui/jquery-1.3.1.js"
   = yield :javascript_lib
   - javascript_tag do
-    $.metadata.setType('attr', 'metadata');
+    /$.metadata.setType('attr', 'metadata');
     $('.js-hide').livequery( function() { $(this).hide(); } );
     $('.js-only').livequery( function() { $(this).removeClass('js-only'); } );
     $('.ui-state-default.hoverable').livequery( function() { $(this).hover( function() { $(this).addClass('ui-state-hover'); }, function() { $(this).removeClass('ui-state-hover'); } ); } );

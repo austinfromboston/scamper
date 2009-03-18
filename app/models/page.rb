@@ -1,7 +1,7 @@
 class Page < ScamperBase
   has_many :placements, :order => 'list_order'
 
-  has_many :articles, :through => :placements, :source => :child_item, :source_type => 'Article', :conditions => [ "placements.block is ?", nil ]
+  has_many :articles, :through => :placements, :source => :child_item, :source_type => 'Article', :conditions => [ "placements.layout_area is ?", nil ]
   has_one :primary_article, :through => :placements, :conditions => [ 'canonical = ?', true], :source => :child_item, :source_type => 'Article'
 
 

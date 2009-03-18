@@ -7,8 +7,34 @@ ol.plain
   :margin 0
 
 ul#breadcrumb
+  :display inline-block
+  :float left
   li
-    :display inline
+    :padding 3px
+    :display inline-block
+
+#menu
+  :margin 10px 0 10px 0
+  :float left
+  :border 1px solid #d8dcdf
+  :width 100%
+
+#menu #buttons
+  :display inline-block
+  :margin 0 0 0 20px
+  :float left
+  div
+    :display inline-block
+    :float left
+  a
+    :display inline-block
+    :text-decoration none
+    :padding-right 3px
+  .icon-padding
+    :width 2px
+    :height 1px
+
+    
 
 h2.info, h6.info
   :text-transform uppercase
@@ -43,7 +69,7 @@ h2.info
   :display none
 
 .busy
-  :background-image url(/images/ui/onramp-busy.gif)
+  :background-image url(/images/ui/ajax-loader.gif)
   :background-repeat no-repeat
   :color transparent
   :padding-left 20px
@@ -132,3 +158,38 @@ body.edit .placements_list
 
 .map-children
   :padding-left 30px
+ 
+#global-search
+  :padding 0 3px 3px 3px
+  :float left
+  input
+    :font-size 14px
+
+.padding
+  :margin 10px
+
+.padding-small
+  :margin 3px
+
+.ui-state-default
+  .ui-icon-grip-diagonal-ne
+    :background-image url(/images/ui/ne_grips.png )
+    :background-position -15px 0
+  .ui-icon-gripsmall-diagonal-ne
+    :background-image url(/images/ui/ne_grips.png )
+    :background-position 0
+.ui-state-hover
+  .ui-icon-grip-diagonal-ne,
+  .ui-icon-gripsmall-diagonal-ne
+    :background-image url(/images/ui/ne_grips_hilite.png )
+
+.right-corner
+  :float right
+
+.busy-loader
+  :background url(/images/ui/ajax-loader.gif) no-repeat
+  :width 30px
+  :height 30px
+
+@import image_selector
+@import admin_list

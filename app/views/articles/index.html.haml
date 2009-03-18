@@ -1,8 +1,8 @@
-%h1 Listing Articles
+- for article in @articles
+  = render :partial => 'articles/list/admin', :locals => { :article => article, :placement => Placement.new( :child_item => article ) }
+-#%h1 Listing Articles
 
-%ul.articles
-  - for article in @articles
-    %li{:class => cycle("odd", "even") + ' ' + 'article'}
-      = render :partial => "article", :collection => @articles
+-#%ul.articles-results
+
     
-= link_to 'New article', new_article_path 
+-#= link_to 'New article', new_article_path 

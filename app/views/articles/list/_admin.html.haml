@@ -1,9 +1,47 @@
-.list-item.article-default
-  - if article.primary_image
-    .list-thumbnail
-      = image_tag article.primary_image.url(:thumb) 
-  .list-description{ :class => (article.primary_image.present? ? 'list-description-with-thumbnail' : nil )}
-    %h4.list-title
-      = link_to article.title, edit_page_path( article.primary_page )
-    %p
-      = article.blurb
+.list-item.article-admin.ui-state-default.ui-corner-all
+  .padding-small
+    .micro-thumbnail
+      - if article.primary_image
+        .img-wrapper
+          = image_tag article.primary_image.url(:micro) 
+    %h4.list-title.span-9
+      - if article.primary_page
+        = link_to article.title, edit_page_path( article.primary_page )
+      - else
+        = !article.title.blank? && article.title || article.body
+
+    .clear
+
+    .edit-article.js-staging
+      -form_for article do |f|
+        .form_item.js-staging
+          = f.label :title, "Title", :class => 'inline span-6'
+          .segment-toolbar.prepend-8.js-staging
+            .button.ui-state-default.ui-corner-all.hoverable
+              .fullscreen-toggle.ui-icon.ui-icon-close.js-staging{:title => 'close editor'}
+          = f.text_field :title
+        .form_item.js-staging
+          = f.label :blurb, "Description", :class => 'inline span-6'
+          = f.text_area :blurb, :class => 'medium'
+
+        .form_item
+          = f.label :body_html, "Body", :class => 'inline span-6'
+          .segment-toolbar.prepend-3
+            .button.ui-state-default.hoverable.ui-corner-all
+              .fullscreen-toggle.ui-icon.ui-icon-arrow-4-diag{:title => 'big editor'}
+            .button.ui-state-default.ui-corner-all.hoverable
+              .cancel-toggle.ui-icon.ui-icon-close{:title => 'close editor'}
+          = f.text_area :body_html, :class => 'wysible span-11'
+        .form_item.js-staging
+          = f.label :published_at
+          = f.date_select :published_at
+
+    .sticky-indicator{ :class => ( placement.assigned? ? 'ui-state-active' : '' ) }
+      .sticky-status.ui-icon.ui-icon-pin-s{:title => "position #{placement.assigned_order}", :class => ( placement.assigned? ? '' : 'js-staging' )  }
+      .sticky-status.ui-icon.ui-icon-pin-w{:title => "make sticky", :class => ( placement.assigned? ? 'js-staging' : '' )  }
+    - if article.published_at
+      Published:
+      = article.published_at.strftime("%m-%d-%Y")
+    - if placement.view_type && placement.view_type !~ /default/
+      View:
+      = placement.view_type.humanize
