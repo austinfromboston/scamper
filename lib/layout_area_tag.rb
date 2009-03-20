@@ -10,7 +10,7 @@ class LayoutAreaTag < Liquid::Tag
 
   def render(context)
 
-    placements = context.scopes.last['page'].placements.ordered.find_all_by_block block_name
+    placements = context.scopes.last['page'].placements.ordered.find_all_by_layout_area block_name
     placements.inject("") do |text, pl|
       if pl.child_item
         if pl.child_item.is_a? Page
